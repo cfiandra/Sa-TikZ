@@ -1,0 +1,556 @@
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% 
+% Sa-TikZ package v0.1 * * (C) Claudio Fiandrino 2012
+% 
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sa-tikz}[2012/10/07 v0.1 Switching architectures design.]
+\RequirePackage{tikz}
+\usetikzlibrary{calc,positioning,decorations.pathreplacing}
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% KEY DEFINITION
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+% N is the key representing the number of inputs x number of modules first stage
+\pgfmathtruncatemacro\N{10}%
+\pgfkeys{/tikz/.cd, N/.initial=10}%
+\pgfkeys{/tikz/.cd, N/.store in=\N}%
+
+% N label
+\def\Nlabel{N}%
+\pgfkeys{/tikz/.cd, N label/.store in=\Nlabel}%
+
+% r1 is the number of modules first stage
+% m1 is the number of inputs first stage per module
+\pgfmathtruncatemacro\rone{5}%
+\pgfkeys{/tikz/.cd, r1/.initial=5}%
+\pgfkeys{/tikz/.cd, r1/.store in=\rone}%
+
+% r1 and m1 label
+\def\ronelabel{r$_1$}%
+\pgfkeys{/tikz/.cd, r1 label/.store in=\ronelabel}%
+\def\monelabel{m$_1$}%
+\pgfkeys{/tikz/.cd, m1 label/.store in=\monelabel}%
+
+% r2 label
+\def\rtwolabel{r$_2$}%
+\pgfkeys{/tikz/.cd, r2 label/.store in=\rtwolabel}%
+
+% M is the key representing the number of inputs x number of modules last stage
+\pgfmathtruncatemacro\M{10}%
+\pgfkeys{/tikz/.cd, M/.initial=10}%
+\pgfkeys{/tikz/.cd, M/.store in=\M}%
+
+% M label
+\def\Mlabel{M}%
+\pgfkeys{/tikz/.cd, M label/.store in=\Mlabel}%
+
+
+% r3 is the number of modules last stage
+% m3 is the number of inputs last stage per module
+\pgfmathtruncatemacro\rthree{5}%
+\pgfkeys{/tikz/.cd, r3/.initial=5}%
+\pgfkeys{/tikz/.cd, r3/.store in=\rthree}%
+
+% r3 and m3 label
+\def\rthreelabel{r$_3$}%
+\pgfkeys{/tikz/.cd, r3 label/.store in=\rthreelabel}%
+\def\mthreelabel{m$_3$}%
+\pgfkeys{/tikz/.cd, m3 label/.store in=\mthreelabel}%
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% GENERAL SETTINGS
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+\pgfmathtruncatemacro{\modulesize}{1cm}
+\pgfkeys{/tikz/.cd, module size/.store in=\modulesize}%
+
+\pgfmathsetmacro{\moduleysep}{1.5}
+\pgfkeys{/tikz/.cd, module ysep/.store in=\moduleysep}%
+
+\pgfmathsetmacro{\modulexsep}{3}
+\pgfkeys{/tikz/.cd, module xsep/.store in=\modulexsep}%
+
+\tikzset{module/.style={%
+		draw,rectangle, minimum size=\modulesize,
+	}
+}
+
+\pgfmathsetmacro{\modulelabelopacity}{1}
+\pgfkeys{/tikz/.cd, module label opacity/.store in=\modulelabelopacity}%
+
+\tikzset{module opacity/.style={
+		text opacity=\modulelabelopacity,
+	}
+}
+
+\pgfmathtruncatemacro{\pinlength}{1}
+\pgfkeys{/tikz/.cd, pin length factor/.store in=\pinlength}%
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% CODE
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+% CLOS SNB
+\tikzset{clos snb/.code={
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\mone}{\N/\rone}
+      \pgfmathtruncatemacro{\mthree}{\M/\rthree}
+
+		% COMPUTATION SNB CONDITION
+		\pgfmathtruncatemacro\rtwo{\mone+\mthree-1}
+
+		% MODULE 1
+		\foreach \i in {1,...,\rone}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r1-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 1	
+		    % the number of inputs module one is exactly \mone
+			\pgfmathsetmacro\roneintervalspace{1/(\mone+1)}		
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,...,\mone}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% the number of outputs of module one is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\roneintervalspace{1/(\rtwo+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}
+		
+		% MODULE 2
+		\foreach \i in {1,...,\rtwo}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r2-\i) at +(\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+
+		  % INPUTS MODULE 2
+			% the number of inputs of module two is the number of modules stage 1 \rone
+			\pgfmathsetmacro\rtwointervalspace{1/(\rone+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,...,\rone}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};	
+			
+			% OUTPUTS MODULE 2
+		    % the number of outputs module two is exactly \rthree
+			\pgfmathsetmacro\rtwointervalspace{1/(\rthree+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,...,\rthree}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		  	
+		}
+		
+		% MODULE 3
+		\foreach \i in {1,...,\rthree}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r3-\i) at +(2*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 3
+			% the number of inputs of module three is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\rthreeintervalspace{1/(\rtwo+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		    % the number of outputs module three is exactly \mthree
+			\pgfmathsetmacro\rthreeintervalspace{1/(\mthree+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,...,\mthree}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};
+		  	
+		}		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,...,\rone}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,...,\rthree}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}		
+	},
+}
+
+\tikzset{clos snb example/.code={
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\mone}{\N/\rone}
+      \pgfmathtruncatemacro{\mthree}{\M/\rthree}
+
+		% COMPUTATION SNB CONDITION
+		\pgfmathtruncatemacro\rtwo{\mone+\mthree-1}
+		
+		% MODULE 1
+		\node[module,#1,module opacity](r1-1) at (0,0) {1};
+		\node[below of=r1-1,yshift=0.75ex](r1-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r1-dots](r1-2) {\rone};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 1	
+		   % just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,2}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}	
+		
+		% MODULE 2
+		\node[module,#1,module opacity](r2-1) at (\modulexsep,0) {1};
+		\node[below of=r2-1,yshift=0.75ex](r2-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r2-dots](r2-2) {\rtwo};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 2
+			% just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};	
+			
+			% OUTPUTS MODULE 2
+		   % just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		}
+		
+		% MODULE 3
+		\node[module,#1,module opacity](r3-1) at (2*\modulexsep,0) {1};
+		\node[below of=r3-1,yshift=0.75ex](r3-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r3-dots](r3-2) {\rthree};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 3
+			% just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		   % just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,2}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};
+		}
+		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}
+		
+		% SETTING LABELS
+		\node[below of=r1-2] {\mone\ $\times$ \rtwo};
+		\node[below of=r2-2] {\rone\ $\times$ \rthree};
+		\node[below of=r3-2] {\rtwo\ $\times$ \mthree};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\N};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\M};
+	},
+}	
+
+% CLOS REAR
+
+\tikzset{clos rear/.code={		
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\mone}{\N/\rone}
+      \pgfmathtruncatemacro{\mthree}{\M/\rthree}
+		
+		% COMPUTATION REAR CONDITION
+		\pgfmathtruncatemacro\rtwo{max(\mone,\mthree)}
+
+		% MODULE 1
+		\foreach \i in {1,...,\rone}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r1-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 1	
+		    % the number of inputs module one is exactly \mone
+			\pgfmathsetmacro\roneintervalspace{1/(\mone+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,...,\mone}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% the number of outputs of module one is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\roneintervalspace{1/(\rtwo+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+			}
+		
+		% MODULE 2
+		\foreach \i in {1,...,\rtwo}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r2-\i) at +(\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 2
+			% the number of inputs of module two is the number of modules stage 1 \rone
+			\pgfmathsetmacro\rtwointervalspace{1/(\rone+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,...,\rone}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};
+			
+			% OUTPUTS MODULE 2
+		    % the number of outputs module two is exactly \rthree
+			\pgfmathsetmacro\rtwointervalspace{1/(\rthree+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,...,\rthree}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		  	
+		}
+		
+		% MODULE 3
+		\foreach \i in {1,...,\rthree}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r3-\i) at +(2*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 3
+			% the number of inputs of module three is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\rthreeintervalspace{1/(\rtwo+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		    % the number of outputs module three is exactly \mthree
+			\pgfmathsetmacro\rthreeintervalspace{1/(\mthree+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,...,\mthree}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};			
+		}
+		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,...,\rone}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,...,\rthree}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}
+		
+	}
+}
+
+
+
+\tikzset{clos rear example/.code={
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\mone}{\N/\rone}
+      \pgfmathtruncatemacro{\mthree}{\M/\rthree}
+
+		% COMPUTATION REAR CONDITION
+		\pgfmathtruncatemacro\rtwo{max(\mone,\mthree)}
+		
+		% MODULE 1
+		\node[module,#1,module opacity](r1-1) at (0,0) {1};
+		\node[below of=r1-1,yshift=0.75ex](r1-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r1-dots](r1-2) {\rone};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 1	
+		   % just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,2}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}	
+		
+		% MODULE 2
+		\node[module,#1,module opacity](r2-1) at (\modulexsep,0) {1};
+		\node[below of=r2-1,yshift=0.75ex](r2-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r2-dots](r2-2) {\rtwo};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 2
+			% just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};	
+			
+			% OUTPUTS MODULE 2
+		   % just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		}
+		
+		% MODULE 3
+		\node[module,#1,module opacity](r3-1) at (2*\modulexsep,0) {1};
+		\node[below of=r3-1,yshift=0.75ex](r3-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r3-dots](r3-2) {\rthree};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 3
+			% just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		   % just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,2}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};
+		}
+		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}
+		
+		% SETTING LABELS
+		\node[below of=r1-2] {\mone\ $\times$ \rtwo};
+		\node[below of=r2-2] {\rone\ $\times$ \rthree};
+		\node[below of=r3-2] {\rtwo\ $\times$ \mthree};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\N};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\M};
+	},
+}
+
+% CLOS EXAMPLE WITH LABELS
+
+\tikzset{clos example with labels/.code={
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\mone}{\N/\rone}
+      \pgfmathtruncatemacro{\mthree}{\M/\rthree}
+
+		% COMPUTATION REAR CONDITION
+		\pgfmathtruncatemacro\rtwo{max(\mone,\mthree)}
+		
+		% MODULE 1
+		\node[module,#1,module opacity](r1-1) at (0,0) {1};
+		\node[below of=r1-1,yshift=0.75ex](r1-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r1-dots](r1-2) {\ronelabel};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 1	
+		   % just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,2}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% just two modules
+			\pgfmathsetmacro\roneintervalspace{1/(2+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}	
+		
+		% MODULE 2
+		\node[module,#1,module opacity](r2-1) at (\modulexsep,0) {1};
+		\node[below of=r2-1,yshift=0.75ex](r2-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r2-dots](r2-2) {\rtwolabel};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 2
+			% just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};	
+			
+			% OUTPUTS MODULE 2
+		   % just two modules
+			\pgfmathsetmacro\rtwointervalspace{1/(2+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		}
+		
+		% MODULE 3
+		\node[module,#1,module opacity](r3-1) at (2*\modulexsep,0) {1};
+		\node[below of=r3-1,yshift=0.75ex](r3-dots) {\vdots};
+		\node[module,#1,module opacity,below of=r3-dots](r3-2) {\rthreelabel};
+		
+		\foreach \i in {1,2}{
+		   % INPUTS MODULE 3
+			% just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,2}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		   % just two modules
+			\pgfmathsetmacro\rthreeintervalspace{1/(2+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,2}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};
+		}
+		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,2}{
+		\foreach \conn in {1,2}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}
+		
+		% SETTING LABELS
+		\node[below of=r1-2] {\monelabel $\times$ \rtwolabel};
+		\node[below of=r2-2] {\ronelabel $\times$ \rthreelabel};
+		\node[below of=r3-2] {\rtwolabel\ $\times$ \mthreelabel};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\Nlabel};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\Mlabel};
+	},
+}	
+
+\endinput
