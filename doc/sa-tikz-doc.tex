@@ -1,0 +1,400 @@
+% to allow compression of cross references. 
+% both pgfmanual and pgfplots manual would be MUCH larger without it.
+\pdfminorversion=5 
+\pdfobjcompresslevel=2
+\documentclass{ltxdoc} % the pgf manual styles are based on ltxdoc
+\usepackage{amsmath}
+
+%% Use the tikz package and loading the libraries
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning,switching_architectures,decorations.pathreplacing}
+
+%% Loading only the package
+%\usepackage{sa-tikz}
+
+% necessary for the manual styles:
+\usepackage{calc}
+
+% if you need an index.
+\usepackage{imakeidx}
+
+
+% for cross-references:
+\usepackage{hyperref}
+    \hypersetup{%
+        colorlinks=true,    % use true to enable colors below:
+        linkcolor=blue,%red,
+        filecolor=blue,%magenta,
+        urlcolor=blue,%cyan,
+        citecolor=blue,
+        %frenchlinks=false, % small caps instead of colors
+        pdfborder=0 0 0,    % PDF link-darstellung, falls colorlinks=false. 0 0 0: nix. 0 0 1: default.
+        %plainpages=false,  % Das ist notwendig, wenn die Seitenzahlen z.T. in Arabischen und z.T. in römischen Ziffern gemacht werden.
+        %pdfsubject=,
+    }
+
+% dedicated commands:
+\newcommand\Tikz{Ti\textit kZ}
+\newcommand{\saTikZ}{\textsc S\textit a-\Tikz}
+\newcommand{\library}[1]{}
+
+% this is due to some stupidity in pgfmanual-en-macros.tex:
+% if this macro is not defined, the automatic cross-referencing is
+% disabled:
+\def\pgfautoxrefs{1}
+
+% this here contains definitions (and the ONLY documentation for these
+% definitions) like
+% \begin{command}{\macro}
+% \end{command}
+% 
+% \begin{key}{/some/key=\marg{value}}
+% \end{key}
+\input ./macros/pgfmanual-en-macros.tex
+
+\makeatletter
+% the index of PGF contains 
+% ----
+% This index only contains automatically generated entries. A good index should
+% also contain carefully selected keywords. This index is not a good index.
+% ---
+% use this line to reset that entry:
+\def\index@prologue{\section*{Index}\addcontentsline{toc}{section}{Index}
+}
+\makeatother
+
+
+% this here allows automatic cross referencing:
+\RequirePackage{pgfmanual}
+
+% this here configures automatic cross referencing.
+% It works for ANY package that uses pgfkeys and is independent on tikz/pgf. 
+\pgfkeys{
+    % whenever an unqualified key is found, the following key prefix
+    % list is tried to find a match.
+    /pdflinks/search key prefixes in={/tikz/,/pgf/},
+    %
+    % the link prefix written to the pdf file:
+    /pdflinks/internal link prefix=pgfp,
+    %
+    /pdflinks/codeexample links=true,
+    /pdflinks/warnings=false,   % for debugging 
+    /pdflinks/show labels=false,% for debugging
+}
+
+% belongs to \usepackage{makeindex}
+\makeindex
+
+\newcommand{\version}{0.1}
+\newcommand{\versiondate}{07/10/2012}
+
+\title{\saTikZ\footnote{This package has version number \textit{v}\version\ of \versiondate; it is released under and subject to the \href{http://www.latex-project.org/lppl/}{\LaTeX\ Project Public License (LPPL)}.}}
+\author{Claudio Fiandrino \\ \small\href{mailto:claudio.fiandrino@gmail.com}{\texttt{claudio.fiandrino@gmail.com}}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+The \saTikZ\ library helps in drawing \emph{switching-architectures}. In particular, one of its aims, is to help students to verify if their exercise are correct, but it could also serve to teachers in preparing lecture notes.
+
+The \saTikZ\ library can be loaded by means of:
+\begin{flushleft}
+\verb|\usetikzlibrary{|\bgroup\color{red!75!black}\verb|switching_architectures|\egroup\verb|}|
+\end{flushleft}
+and in this case you should manually load also:
+\begin{flushleft}
+\verb|\usepackage{|\bgroup\color{red!75!black}\verb|tikz|\egroup\verb|}|\\
+\verb|\usetikzlibrary{|\bgroup\color{red!75!black}\verb|calc, positioning, decorations.pathreplacing|\egroup\verb|}|
+\end{flushleft}
+or by means of:
+\begin{flushleft}
+\verb|\usepackage{|\bgroup\color{red!75!black}\verb|sa-tikz|\egroup\verb|}|
+\end{flushleft}
+In the latter case automatically the \Tikz\ package and the libraries \bgroup\color{red!75!black}\verb|calc|\egroup{}, \bgroup\color{red!75!black}\verb|positioning|\egroup\ and \bgroup\color{red!75!black}\verb|decorations.pathreplacing|\egroup\ are loaded.
+
+The version \textit{v}\version\ provides a way to define Clos Networks Strictly-non-Blocking (snb) and Rearrangeable (rear). Future implementations will provide a way to draw also Benes and Cantor Networks.
+
+\section{Basic usage}
+The simplest use of the package is to define a 
+\begin{command}{{\node}}
+    Basic command definition.
+\end{command}
+with one of the following options
+\begin{key}{/tikz/clos snb}
+    Option for drawing a Clos Network Strictly-non-Blocking.
+\end{key}
+\begin{key}{/tikz/clos rear}
+    Option for drawing a Clos Network Rearrangeable.
+\end{key}
+inside a |tikzpicture| environment:
+\begin{environment}{{tikzpicture}\opt{\oarg{options}}}
+\end{environment}
+
+The following example shows a Rearrangeable Clos Network.
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[clos rear] {};
+\end{tikzpicture}
+\end{codeexample}
+
+Consider instead a Strictly-non-Blocking Clos Network:
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[clos snb] {};
+\end{tikzpicture}
+\end{codeexample}
+
+Notice from the examples that automatically the library is able to compute the constraints that define a Clos Network to be Strictly-non-Blocking or Rearrangeable. Moreover, the network drawn is characterized by:
+\begin{itemize}
+\item the first stage with:
+\begin{itemize}
+\item a number of modules equal to 5;
+\item each one with two input ports;
+\end{itemize}
+\item the last stage with:
+\begin{itemize}
+\item a number of modules equal to 5;
+\item each one with two output ports.
+\end{itemize}
+\end{itemize}
+Each module of the network is numbered according to the stage it belongs to.
+
+\section{The options}
+\subsection{Designing choices}
+Usually, as design parameter one knows the total number of input ports of the first stage and the total number of output ports of the last stage. These two parameters could be modify by means of:
+\begin{key}{/tikz/N=\marg{value} (initially 10)}
+    This is the number of total input ports in the first stage.
+\end{key}
+
+\begin{key}{/tikz/M=\marg{value} (initially 10)}
+    This is the number of total output ports in the first stage.
+\end{key}
+Usually, a second design parameter is the number of modules present in the first and last stage. \saTikZ\ defines:
+\begin{key}{/tikz/r1=\marg{value} (initially 5)}
+    This is the number of total input ports in the first stage.
+\end{key}
+
+\begin{key}{/tikz/r3=\marg{value} (initially 5)}
+    This is the number of total output ports in the last stage.
+\end{key}
+The two design parameter provide the number of ports of each module:
+\[\textrm{m}_1=\dfrac{N}{r1} \hspace*{2cm} \textrm{m}_3=\dfrac{M}{r3} \]
+
+Some examples considering |N|=9, |r1|=3, |M|=9 and |r3|=3.
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[N=9,r1=3,M=9,r3=3,clos rear] {};
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[N=9,r1=3,M=9,r3=3,clos snb] {};
+\end{tikzpicture}
+\end{codeexample}
+
+\subsection{Output customization}
+This subsection focuses on how to customize the aspect of the drawing.
+
+\begin{key}{/tikz/module size=\marg{value} (initially 1cm)}
+    This option allows to set the module dimension.
+\end{key}
+
+\begin{key}{/tikz/module ysep=\marg{value} (initially 1.5)}
+    This option allows to set the vertical module distance factor.
+\end{key}
+
+\begin{key}{/tikz/module xsep=\marg{value} (initially 3)}
+    This option allows to set the horizontal module distance factor.
+\end{key}
+
+\begin{key}{/tikz/module label opacity=\marg{value} (initially 1)}
+    This option allows to mask the module label when the \meta{value} is set to 0.
+\end{key}
+
+\begin{key}{/tikz/pin length factor=\marg{value} (initially 1)}
+    This option allows to reduce/increase the length of the pins drawn in input/output. Use a \meta{value} [0,1] to reduce the length or, viceversa, a \meta{value} greater than 1 to increase the length.
+\end{key}
+
+The following example shows a Rearrangeable Clos Network with some options modification. Notice that the |module label opacity| should be given as parameter of the desired network.
+
+\begin{codeexample}[]
+\begin{tikzpicture}[N=9,r1=3,M=9,r3=3]
+    \node[module size=0.5cm,pin length factor=0.5,
+        module ysep=1, module xsep=1.25,
+        clos rear={module label opacity=0}] {};
+\end{tikzpicture}
+\end{codeexample}
+
+The options could also be introduced with the standard \Tikz\ syntax:
+\begin{command}{{\tikzset}\marg{options}}
+    Command that process the \meta{options}: the should be provided separated by a comma.
+\end{command}
+Therefore, the previous example could be modified into:
+\begin{codeexample}[]
+\tikzset{module size=0.5cm,pin length factor=0.5,
+         module ysep=1, module xsep=1.25,}
+\begin{tikzpicture}[N=9,r1=3,M=9,r3=3]
+    \node[clos rear={module label opacity=0}] {};
+\end{tikzpicture}
+\end{codeexample}
+
+
+\section{Advanced usage}
+In this section some more advanced examples are shown.
+
+\subsection{Identifying front input/output ports}
+In the first one it is shown how to reference the front input and output ports for the first and last stage. Each front input port could be accessed by means of:
+\begin{flushleft}
+\verb|r1-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front input|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r1-1-front input-1|;
+\end{flushleft}
+Each front output port could be accessed by means of:
+\begin{flushleft}
+\verb|r3-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front output|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r3-1-front output-1|;
+\end{flushleft}
+
+\begin{codeexample}[]
+\begin{tikzpicture}[module xsep=2]
+  \node[N=4,r1=2,M=4,r3=2,clos rear={module label opacity=0}] {};
+  \foreach \name 
+    in {r1-1-front input-1,r1-1-front input-2,
+        r1-2-front input-1,r1-2-front input-2}
+    \node[left] at (\name) {\scriptsize{\texttt{\name}}};
+  \foreach \name 
+    in {r3-1-front output-1,r3-1-front output-2,
+        r3-2-front output-1,r3-2-front output-2}
+    \node[right] at (\name) {\scriptsize{\texttt{\name}}};
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[N=9,r1=3,M=9,r3=3,clos snb={module label opacity=0}] {};
+
+	\foreach \startmodule in {1,...,3}{
+		\foreach \port in {1,...,3}
+				 \node[left] at (r1-\startmodule-front input-\port)
+				 {\scriptsize{input \startmodule-\port}}; 
+	}
+	\foreach \startmodule in {1,...,3}{
+		\foreach \port in {1,...,3}
+				 \node[right] at (r3-\startmodule-front output-\port)
+				 {\scriptsize{output \startmodule-\port}}; 
+	}    
+\end{tikzpicture}
+\end{codeexample}
+
+\subsection{Identifying input/output ports per module}
+
+It is also possible to access, for each module, its input and output ports. The sintax is similar to the one used for front input and output ports; each input port could be accessed by means of:
+\begin{flushleft}
+\verb|r|\bgroup\color{red!75!black}\verb|stage number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|input|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r1-1-input-1|;
+\end{flushleft}
+Each output port could be accessed by means of:
+\begin{flushleft}
+\verb|r|\bgroup\color{red!75!black}\verb|stage number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front output|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r2-1-output-1|;
+\end{flushleft}
+This allows you to design a connection from the first stage to the last stage. Here is an example. 
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[N=8,r1=4,M=8,r3=4,clos rear={module label opacity=0}] {};
+    \draw[red,ultra thick](r1-2-input-1)--(r1-2-output-2) 
+    	(r2-2-input-2)--(r2-2-output-3)
+    	(r3-3-input-2)--(r3-3-output-2);
+   	\draw[red,ultra thick](r1-4-input-1)--(r1-4-output-1) 
+    	(r2-1-input-3)--(r2-1-output-1)
+    	(r3-1-input-1)--(r3-1-output-2);
+\end{tikzpicture}
+\end{codeexample}
+
+In the next version it will be implemented an automatic way to design connection paths.
+
+% Magari metterli in background per non disturbare eventuali label
+
+\section{Didactic purposes}
+To quickly draw a Clos Network  it is possible to exploit:
+\begin{key}{/tikz/clos snb example}
+    Option for quickly drawing a Clos Network Strictly-non-Blocking.
+\end{key}
+\begin{key}{/tikz/clos rear example}
+    Option for quickly drawing a Clos Network Rearrangeable.
+\end{key}
+In this way the network is not seen in the whole complexity, but it is synthetically  depicted. An example of a Strictly-non-Blocking Clos Network drawn with this approach:
+\begin{codeexample}[]
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+    \node[clos snb example] {};
+\end{tikzpicture}
+\end{codeexample}
+
+Example of a Rearrangeable Clos Network:
+\begin{codeexample}[]
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+    \node[clos rear example] {};
+\end{tikzpicture}
+\end{codeexample}
+
+The networks drawn, automatically display the values at which the input parameters |N|, |M|, |r1| and |r3| have been set. However, to let the user to have the possibility of deploying labels rather than the input parameter values, the followin options is available:
+
+\begin{key}{/tikz/clos example with labels}
+    Option for quickly drawing a Clos Network with custom labels.
+\end{key}
+
+The labels that could be customized are:
+\begin{key}{/tikz/N label=\marg{value} (default N)}
+    This options sets the label representing the total number of ports in the first stage.
+\end{key}
+
+\begin{key}{/tikz/r1 label=\marg{value} (default r$_1$)}
+    This options sets the label representing the number of modules in the first stage.
+\end{key}
+
+\begin{key}{/tikz/m1 label=\marg{value} (default m$_1$)}
+    This options sets the label representing the number of ports per module in the first stage.
+\end{key}
+
+\begin{key}{/tikz/r2 label=\marg{value} (default r$_2$)}
+    This options sets the label representing the number of modules in the second stage.
+\end{key}
+
+\begin{key}{/tikz/M label=\marg{value} (default M)}
+    This options sets the label representing the total number of ports in the last stage.
+\end{key}
+
+\begin{key}{/tikz/r3 label=\marg{value} (default r$_3$)}
+    This options sets the label representing the number of modules in the last stage.
+\end{key}
+
+\begin{key}{/tikz/m3 label=\marg{value} (default m$_3$)}
+    This options sets the label representing the number of ports per module in the last stage.
+\end{key}
+
+An example with default values:
+\begin{codeexample}[]
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+    \node[clos example with labels] {};
+\end{tikzpicture}
+\end{codeexample}
+
+Here is an example with custom labels introduced by means of the |\tikzset| syntax.
+
+\begin{codeexample}[]
+\tikzset{N label={p$_1$ $\times$ q$_1$},M label={p$_3$ $\times$ q$_3$}, 
+r1 label=p$_1$, m1 label=q$_1$, r2 label=p$_2$,r3 label=p$_3$, m3 label=q$_3$}
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+    \node[clos example with labels] {};
+\end{tikzpicture}
+\end{codeexample}
+
+% Verificare che module ysep funzioni anche qui!!!!
+
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * 
+% belongs to \usepackage{makeindex}
+\printindex
+\end{document}
