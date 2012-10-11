@@ -98,13 +98,13 @@
 
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
-The \saTikZ\ library helps in drawing \emph{switching-architectures}. In particular, one of its aims, is to help students to verify if their exercise are correct, but it could also serve to teachers in preparing lecture notes.
+The \saTikZ\ library helps in drawing \emph{switching-architectures}. In particular, one of its aims, is to help students to verify if their exercises are correct, but it could also help teachers in preparing lecture notes.
 
 The \saTikZ\ library can be loaded by means of:
 \begin{flushleft}
 \verb|\usetikzlibrary{|\bgroup\color{red!75!black}\verb|switching_architectures|\egroup\verb|}|
 \end{flushleft}
-and in this case you should manually load also:
+and in this case you should also load manually:
 \begin{flushleft}
 \verb|\usepackage{|\bgroup\color{red!75!black}\verb|tikz|\egroup\verb|}|\\
 \verb|\usetikzlibrary{|\bgroup\color{red!75!black}\verb|calc, positioning, decorations.pathreplacing|\egroup\verb|}|
@@ -141,7 +141,7 @@ The following example shows a Rearrangeable Clos Network.
 \end{tikzpicture}
 \end{codeexample}
 
-Consider instead a Strictly-non-Blocking Clos Network:
+The following example shows a Strictly-non-Blocking Clos Network.
 
 \begin{codeexample}[]
 \begin{tikzpicture}
@@ -166,13 +166,13 @@ Each module of the network is numbered according to the stage it belongs to.
 
 \section{The options}
 \subsection{Designing choices}
-Usually, as design parameter one knows the total number of input ports of the first stage and the total number of output ports of the last stage. These two parameters could be modify by means of:
+The two first important design parameters are the total number of input ports of the first stage and the total number of output ports of the last stage. These two parameters could be modified by means of:
 \begin{key}{/tikz/N=\marg{value} (initially 10)}
     This is the number of total input ports in the first stage.
 \end{key}
 
 \begin{key}{/tikz/M=\marg{value} (initially 10)}
-    This is the number of total output ports in the first stage.
+    This is the number of total output ports in the last stage.
 \end{key}
 Usually, a second design parameter is the number of modules present in the first and last stage. \saTikZ\ defines:
 \begin{key}{/tikz/r1=\marg{value} (initially 5)}
@@ -182,7 +182,7 @@ Usually, a second design parameter is the number of modules present in the first
 \begin{key}{/tikz/r3=\marg{value} (initially 5)}
     This is the number of total output ports in the last stage.
 \end{key}
-The two design parameter provide the number of ports of each module:
+The two design parameters provide the number of ports of each module:
 \[\textrm{m}_1=\dfrac{N}{r1} \hspace*{2cm} \textrm{m}_3=\dfrac{M}{r3} \]
 
 Some examples considering |N|=9, |r1|=3, |M|=9 and |r3|=3.
@@ -233,7 +233,7 @@ The following example shows a Rearrangeable Clos Network with some options modif
 
 The options could also be introduced with the standard \Tikz\ syntax:
 \begin{command}{{\tikzset}\marg{options}}
-    Command that process the \meta{options}: the should be provided separated by a comma.
+    Command that process the \meta{options}: they should be provided separated by a comma.
 \end{command}
 Therefore, the previous example could be modified into:
 \begin{codeexample}[]
@@ -249,7 +249,7 @@ Therefore, the previous example could be modified into:
 In this section some more advanced examples are shown.
 
 \subsection{Identifying front input/output ports}
-In the first one it is shown how to reference the front input and output ports for the first and last stage. Each front input port could be accessed by means of:
+In this subsection it is shown how to reference the front input and output ports for the first and last stage. Each front input port could be accessed by means of:
 \begin{flushleft}
 \verb|r1-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front input|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r1-1-front input-1|;
 \end{flushleft}
@@ -257,6 +257,8 @@ Each front output port could be accessed by means of:
 \begin{flushleft}
 \verb|r3-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front output|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r3-1-front output-1|;
 \end{flushleft}
+
+A simple example with a Rearrangeable Clos network of 4 input and output ports; the first stage and the last one have both 2 modules.
 
 \begin{codeexample}[]
 \begin{tikzpicture}[module xsep=2]
@@ -271,6 +273,8 @@ Each front output port could be accessed by means of:
     \node[right] at (\name) {\scriptsize{\texttt{\name}}};
 \end{tikzpicture}
 \end{codeexample}
+
+The following is a Strictly-non-Blocking Clos network of 9 input and output ports in which the first and last stage have 3 modules each one.
 
 \begin{codeexample}[]
 \begin{tikzpicture}
@@ -291,7 +295,7 @@ Each front output port could be accessed by means of:
 
 \subsection{Identifying input/output ports per module}
 
-It is also possible to access, for each module, its input and output ports. The sintax is similar to the one used for front input and output ports; each input port could be accessed by means of:
+It is also possible to access, for each module of each stage, its input and output ports. The syntax is similar to the one used for the front input and output ports; each input port could be accessed by means of:
 \begin{flushleft}
 \verb|r|\bgroup\color{red!75!black}\verb|stage number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|input|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r1-1-input-1|;
 \end{flushleft}
@@ -299,7 +303,7 @@ Each output port could be accessed by means of:
 \begin{flushleft}
 \verb|r|\bgroup\color{red!75!black}\verb|stage number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|module number|\egroup\verb|-|\bgroup\color{red!75!black}\verb|front output|\egroup\verb|-|\bgroup\color{red!75!black}\verb|port number|\egroup; example: \verb|r2-1-output-1|;
 \end{flushleft}
-This allows you to design a connection from the first stage to the last stage. Here is an example. 
+This allows to derive connections from the first stage to the last stage. Here is an example. 
 
 \begin{codeexample}[]
 \begin{tikzpicture}
@@ -308,7 +312,7 @@ This allows you to design a connection from the first stage to the last stage. H
     	(r2-2-input-2)--(r2-2-output-3)
     	(r3-3-input-2)--(r3-3-output-2);
    	\draw[red,ultra thick](r1-4-input-1)--(r1-4-output-1) 
-    	(r2-1-input-3)--(r2-1-output-1)
+    	(r2-1-input-4)--(r2-1-output-1)
     	(r3-1-input-1)--(r3-1-output-2);
 \end{tikzpicture}
 \end{codeexample}
@@ -325,27 +329,27 @@ To quickly draw a Clos Network  it is possible to exploit:
 \begin{key}{/tikz/clos rear example}
     Option for quickly drawing a Clos Network Rearrangeable.
 \end{key}
-In this way the network is not seen in the whole complexity, but it is synthetically  depicted. An example of a Strictly-non-Blocking Clos Network drawn with this approach:
+In this way the network is not seen in its whole complexity, but it is synthetically  depicted. An example of a Strictly-non-Blocking Clos Network drawn with this approach:
 \begin{codeexample}[]
 \begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
     \node[clos snb example] {};
 \end{tikzpicture}
 \end{codeexample}
 
-Example of a Rearrangeable Clos Network:
+Similarly, an example of a Rearrangeable Clos Network:
 \begin{codeexample}[]
 \begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
     \node[clos rear example] {};
 \end{tikzpicture}
 \end{codeexample}
 
-The networks drawn, automatically display the values at which the input parameters |N|, |M|, |r1| and |r3| have been set. However, to let the user to have the possibility of deploying labels rather than the input parameter values, the followin options is available:
+The networks drawn, automatically display the values at which the input parameters |N|, |M|, |r1| and |r3| have been set. However, to let the user to have the possibility of deploying labels rather than the input parameter values, the following option is available:
 
 \begin{key}{/tikz/clos example with labels}
     Option for quickly drawing a Clos Network with custom labels.
 \end{key}
 
-The labels that could be customized are:
+The labels could be customized by means of:
 \begin{key}{/tikz/N label=\marg{value} (default N)}
     This options sets the label representing the total number of ports in the first stage.
 \end{key}
@@ -374,12 +378,14 @@ The labels that could be customized are:
     This options sets the label representing the number of ports per module in the last stage.
 \end{key}
 
-An example with default values:
+An example with the default values:
+
 \begin{codeexample}[]
 \begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
     \node[clos example with labels] {};
 \end{tikzpicture}
 \end{codeexample}
+\pagebreak
 
 Here is an example with custom labels introduced by means of the |\tikzset| syntax.
 
