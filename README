@@ -1,0 +1,10 @@
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% Sa-TikZ: TikZ library to draw switching architectures
+%
+% Version v0.1 6/10 - (C) Claudio Fiandrino
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+%
+% To use it copy the files sa-tikz.sty and
+% tikzlibraryswitching_architectures.code.tex 
+% in the directory of your document file. To load the
+% library read the documentation.
