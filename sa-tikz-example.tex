@@ -1,0 +1,34 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning,switching_architectures,decorations.pathreplacing}
+
+
+
+\begin{document}
+Clos network with 9 modules in the first stage and 3 modules in the last stage:
+
+\begin{center}
+\begin{tikzpicture}
+\node[N=27,M=27,r1=9,r3=3,clos snb] {};
+\end{tikzpicture}
+\end{center}
+
+\newpage
+Clos network with 4 modules in the first stage and 4 modules in the last stage:
+
+\begin{center}
+\begin{tikzpicture}
+\node[N=8,M=8,r1=4,r3=4,clos rear] {};
+\end{tikzpicture}
+\end{center}
+
+Example of network with labels:
+
+\begin{center}
+\begin{tikzpicture}
+\node[clos example with labels]{};
+\end{tikzpicture}
+\end{center}
+
+\end{document}
