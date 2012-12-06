@@ -1,10 +1,17 @@
-% * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % Sa-TikZ: TikZ library to draw switching architectures
 %
-% Version v0.1 6/10 - (C) Claudio Fiandrino
-% * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% Version v0.2 7/12/2012 - (C) Claudio Fiandrino
+% 
+% E-mail: claudio dot fiandrino at gmail dot com
 %
-% To use it copy the files sa-tikz.sty and
+% Released under the LaTeX Project Public License v1.3c or later
+% See http://www.latex-project.org/lppl.txt
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% The library provides an easy way to draw switching architectures
+% and customize their aspect.
+%
+% To use the library copy the files sa-tikz.sty and
 % tikzlibraryswitching_architectures.code.tex 
-% in the directory of your document file. To load the
-% library read the documentation.
+% in the directory of your document file or install it in your 
+% personal tree.

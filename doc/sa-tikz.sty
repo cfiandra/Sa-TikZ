@@ -4,9 +4,25 @@
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sa-tikz}[2012/10/07 v0.1 Switching architectures design.]
+\ProvidesPackage{sa-tikz}[2012/12/06 v0.2 Switching architectures design.]
 \RequirePackage{tikz}
 \usetikzlibrary{calc,positioning,decorations.pathreplacing}
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% 
+% Sa-TikZ package v0.1 * * (C) Claudio Fiandrino 2012
+% 
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+% UTILITY
+% * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+\def\CalcHeight(#1,#2)#3{%
+\pgfpointdiff{\pgfpointanchor{#1}{south west}}{\pgfpointanchor{#2}{north west}}
+\pgfmathsetmacro{\myheight}{veclen(\pgf@x,\pgf@y)}
+\global\expandafter\edef\csname #3\endcsname{\myheight}
+}
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % KEY DEFINITION
@@ -62,7 +78,6 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % GENERAL SETTINGS
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
 \pgfmathtruncatemacro{\modulesize}{1cm}
 \pgfkeys{/tikz/.cd, module size/.store in=\modulesize}%
 
@@ -75,6 +90,12 @@
 \tikzset{module/.style={%
 		draw,rectangle, minimum size=\modulesize,
 	}
+}
+
+\tikzset{module extensible/.style={%
+		draw,rectangle, minimum size=#1,
+	},
+	module extensible/.default={\modulesize}
 }
 
 \pgfmathsetmacro{\modulelabelopacity}{1}
@@ -303,7 +324,7 @@
 			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
 			in {1,...,\rtwo}
 			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
-			}
+		}
 		
 		% MODULE 2
 		\foreach \i in {1,...,\rtwo}{
@@ -545,12 +566,120 @@
 		}
 		
 		% SETTING LABELS
-		\node[below of=r1-2] {\monelabel $\times$ \rtwolabel};
-		\node[below of=r2-2] {\ronelabel $\times$ \rthreelabel};
-		\node[below of=r3-2] {\rtwolabel\ $\times$ \mthreelabel};
+		\node[below of=r1-2] {\monelabel~$\times$~\rtwolabel};
+		\node[below of=r2-2] {\ronelabel~$\times$~\rthreelabel};
+		\node[below of=r3-2] {\rtwolabel~$\times$~\mthreelabel};
 		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\Nlabel};
 		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\Mlabel};
 	},
-}	
+}
+
+% BENES
+% uses modules 2x2
+
+% P is the number of input/output ports
+\pgfmathtruncatemacro\P{8}%
+\pgfkeys{/tikz/.cd, P/.initial=8}%
+\pgfkeys{/tikz/.cd, P/.store in=\P}%
+
+\tikzset{benes/.code={		
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\m}{2}
+		
+		% Numbers of modules in the second stage
+		\pgfmathtruncatemacro\rtwo{\m}
+		
+		% Number of modules in the first/third stage
+		\pgfmathtruncatemacro{\r}{\P/\m}
+		
+		\ifnum\P=4
+		   \def\increment{0-\i*0.5*\r*\moduleysep}
+		   \def\xincrement{\r*0.25*\modulexsep}
+		\else
+		   \def\increment{0-\i*0.39*\r*\moduleysep}
+		   \def\xincrement{\r*0.2*\modulexsep}
+		\fi
+
+		% MODULE 1
+		\foreach \i in {1,...,\r}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r1-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 1	
+		    % the number of inputs module one is exactly \mone
+			\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,...,\m}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% the number of outputs of module one is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\roneintervalspace{1/(\rtwo+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}		  
+      
+		% MODULE 2
+		\foreach \i in {1,...,\rtwo}{
+		   
+		  	\path let \n1 = {int(0-\i)}, \n2={\increment}
+		  	in
+		  	node[module extensible={\r*0.5*\modulesize},#1,module opacity,yshift=1cm]  (r2-\i) at +(\xincrement,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  			  	
+		  	% INPUTS MODULE 2
+			% the number of inputs of module two is the number of modules stage 1 \rone
+			\pgfmathsetmacro\rtwointervalspace{1/(\r+1)}
+			\foreach \rtwoinput[evaluate=\rtwoinput as \rtwointerval using \rtwointervalspace*\rtwoinput] 
+			in {1,...,\r}
+			\node[circle,draw,scale=0.1] (r2-\i-input-\rtwoinput)at($(r2-\i.north west)!\rtwointerval!(r2-\i.south west)$)  {};
+			
+			% OUTPUTS MODULE 2
+		    % the number of outputs module two is exactly \rthree
+			\pgfmathsetmacro\rtwointervalspace{1/(\r+1)}		
+			\foreach \rtwooutput[evaluate=\rtwooutput as \rtwointerval using \rtwointervalspace*\rtwooutput] 
+			in {1,...,\r}
+			\node[circle,draw,scale=0.1] (r2-\i-output-\rtwooutput)at ($(r2-\i.north east)!\rtwointerval!(r2-\i.south east)$) {};
+		  	
+		}
+		
+		% MODULE 3
+		\foreach \i in {1,...,\r}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r3-\i) at +(2*\xincrement,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 3
+			% the number of inputs of module three is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\rthreeintervalspace{1/(\rtwo+1)}
+			\foreach \rthreeinput[evaluate=\rthreeinput as \rthreeinterval using \rthreeintervalspace*\rthreeinput] 
+			in {1,...,\rtwo}
+			\node[circle,draw,scale=0.1] (r3-\i-input-\rthreeinput)at($(r3-\i.north west)!\rthreeinterval!(r3-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE 3	
+		    % the number of outputs module three is exactly \m
+			\pgfmathsetmacro\rthreeintervalspace{1/(\m+1)}		
+			\foreach \rthreeoutput[evaluate=\rthreeoutput as \rthreeinterval using \rthreeintervalspace*\rthreeoutput] 
+			in {1,...,\m}
+			\draw ($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r3-\i-front output-\rthreeoutput){}--($(r3-\i.north east)!\rthreeinterval!(r3-\i.south east)$) node[circle,draw,scale=0.1] (r3-\i-output-\rthreeoutput) {};			
+		}
+		
+		% DRAWING CONNECTIONS
+		%% from r1 to r2
+		\foreach \startmodule in {1,...,\r}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r1-\startmodule-output-\conn)--(r2-\conn-input-\startmodule);
+		}
+		%% from r2 to r3
+		\foreach \startmodule in {1,...,\r}{
+		\foreach \conn in {1,...,\rtwo}
+				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
+		}
+		
+	}
+}
+
 
 \endinput

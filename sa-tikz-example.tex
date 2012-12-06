@@ -4,7 +4,6 @@
 \usetikzlibrary{calc,positioning,switching_architectures,decorations.pathreplacing}
 
 
-
 \begin{document}
 Clos network with 9 modules in the first stage and 3 modules in the last stage:
 
@@ -28,6 +27,12 @@ Example of network with labels:
 \begin{center}
 \begin{tikzpicture}
 \node[clos example with labels]{};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}
+\node[P=4,benes={module label opacity=0}]{};
 \end{tikzpicture}
 \end{center}
 
