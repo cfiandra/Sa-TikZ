@@ -34,13 +34,13 @@
 \pgfkeys{/tikz/.cd, r1/.store in=\rone}%
 
 % r1 and m1 label
-\def\ronelabel{r$_1$}%
+\def\ronelabel{r\ensuremath{_1}}%
 \pgfkeys{/tikz/.cd, r1 label/.store in=\ronelabel}%
-\def\monelabel{m$_1$}%
+\def\monelabel{m\ensuremath{_1}}%
 \pgfkeys{/tikz/.cd, m1 label/.store in=\monelabel}%
 
 % r2 label
-\def\rtwolabel{r$_2$}%
+\def\rtwolabel{r\ensuremath{_2}}%
 \pgfkeys{/tikz/.cd, r2 label/.store in=\rtwolabel}%
 
 % M is the key representing the number of inputs x number of modules last stage
@@ -60,9 +60,9 @@
 \pgfkeys{/tikz/.cd, r3/.store in=\rthree}%
 
 % r3 and m3 label
-\def\rthreelabel{r$_3$}%
+\def\rthreelabel{r\ensuremath{_3}}%
 \pgfkeys{/tikz/.cd, r3 label/.store in=\rthreelabel}%
-\def\mthreelabel{m$_3$}%
+\def\mthreelabel{m\ensuremath{_3}}%
 \pgfkeys{/tikz/.cd, m3 label/.store in=\mthreelabel}%
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -98,6 +98,22 @@
 
 \pgfmathtruncatemacro{\pinlength}{1}
 \pgfkeys{/tikz/.cd, pin length factor/.store in=\pinlength}%
+
+\tikzset{math mode labels/.style={%
+		execute at begin node=$,%
+      execute at end node=$,%
+	}
+}
+\pgfkeys{/tikz/.cd, use math mode labels/.is choice}%
+\pgfkeys{/tikz/.cd, use math mode labels/true/.style={math mode labels}}%
+\pgfkeys{/tikz/.cd, use math mode labels/false/.style={}}%
+
+\tikzset{set math mode labels/.style={%
+		use math mode labels=#1,
+	},
+	set math mode labels/.default=false,
+}
+
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % CODE
@@ -276,11 +292,11 @@
 		}
 		
 		% SETTING LABELS
-		\node[below of=r1-2] {\mone\ $\times$ \rtwo};
-		\node[below of=r2-2] {\rone\ $\times$ \rthree};
-		\node[below of=r3-2] {\rtwo\ $\times$ \mthree};
-		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\N};
-		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\M};
+		\node[below of=r1-2,set math mode labels] {\mone~\ensuremath{\times}~\rtwo};
+		\node[below of=r2-2,set math mode labels] {\rone~\ensuremath{\times}~\rthree};
+		\node[below of=r3-2,set math mode labels] {\rtwo~\ensuremath{\times}~\mthree};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm,set math mode labels]{\N};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm,set math mode labels]{\M};
 	},
 }	
 
@@ -461,11 +477,11 @@
 		}
 		
 		% SETTING LABELS
-		\node[below of=r1-2] {\mone\ $\times$ \rtwo};
-		\node[below of=r2-2] {\rone\ $\times$ \rthree};
-		\node[below of=r3-2] {\rtwo\ $\times$ \mthree};
-		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\N};
-		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\M};
+		\node[below of=r1-2, set math mode labels] {\mone~\ensuremath{\times}~\rtwo};
+		\node[below of=r2-2, set math mode labels] {\rone~\ensuremath{\times}~\rthree};
+		\node[below of=r3-2, set math mode labels] {\rtwo~\ensuremath{\times}~\mthree};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm, set math mode labels]{\N};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm, set math mode labels]{\M};
 	},
 }
 
@@ -556,11 +572,11 @@
 		}
 		
 		% SETTING LABELS
-		\node[below of=r1-2] {\monelabel~$\times$~\rtwolabel};
-		\node[below of=r2-2] {\ronelabel~$\times$~\rthreelabel};
-		\node[below of=r3-2] {\rtwolabel~$\times$~\mthreelabel};
-		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm]{\Nlabel};
-		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm]{\Mlabel};
+		\node[below of=r1-2,set math mode labels] {\monelabel~\ensuremath{\times}~\rtwolabel};
+		\node[below of=r2-2,set math mode labels] {\ronelabel~\ensuremath{\times}~\rthreelabel};
+		\node[below of=r3-2,set math mode labels] {\rtwolabel~\ensuremath{\times}~\mthreelabel};
+		\draw[decorate,decoration={brace}]($(r1-2-front input-2)-(0.1,0)$)--($(r1-1-front input-1)-(0.1,0)$) node[midway,left=0.1cm,set math mode labels]{\Nlabel};
+		\draw[decorate,decoration={brace}]($(r3-1-front output-1)+(0.1,0)$)--($(r3-2-front output-2)+(0.1,0)$) node[midway,right=0.1cm,set math mode labels]{\Mlabel};
 	},
 }
 
@@ -668,6 +684,94 @@
 				\draw(r3-\startmodule-input-\conn)--(r2-\conn-output-\startmodule);
 		}
 		
+	}
+}
+
+% BENES COMPLETE
+
+\tikzset{benes complete/.code={		
+
+      % Number of ports per module
+      \pgfmathtruncatemacro{\m}{2}
+		
+      % Number of modules in the first/third stage
+      \pgfmathtruncatemacro{\r}{\P/\m}
+      
+      % Number of stages
+      \pgfmathtruncatemacro{\stages}{2*round(log2(\P))-1}
+      
+      % MODULES for all stages
+      \foreach \s [evaluate=\s as \numstage using int(\s-1)] in {1,...,\stages}{
+      	\ifnum\s=1
+      	% FIRST MODULE 
+		\foreach \i in {1,...,\r}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE 1	
+		    % the number of inputs module one is exactly \mone
+			\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			in {1,...,\m}
+			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+			
+			% OUTPUTS MODULE 1
+			% the number of outputs of module one is the number of modules stage 2
+			\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			in {1,...,\m}
+			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		}
+      	\fi
+      	\ifnum\s=\stages
+		% FINAL MODULE 
+		\foreach \i in {1,...,\r}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE \s
+			% the number of inputs of module three is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\rintervalspace{1/(\m+1)}
+			\foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
+			in {1,...,\m}
+			\node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE \s
+		    % the number of outputs module three is exactly \mthree
+			\pgfmathsetmacro\rintervalspace{1/(\m+1)}		
+			\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
+			in {1,...,\m}
+			\draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r\s-\i-front output-\routput){}--($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$) node[circle,draw,scale=0.1] (r\s-\i-output-\routput) {};			
+		}
+		\fi
+		\pgfmathparse{and(\s>1,\s<\stages)}
+		\let\cond\pgfmathresult
+		\ifnum\cond=1 
+		% INTERMEDIATE MODULEs 
+		\foreach \i in {1,...,\r}{
+		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		  	in
+		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		  	
+		  	% INPUTS MODULE \s
+			% the number of inputs of module three is the number of modules stage 2 \rtwo
+			\pgfmathsetmacro\rintervalspace{1/(\m+1)}
+			\foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
+			in {1,...,\m}
+			\node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
+		  	
+		  	% OUTPUTS MODULE \s
+		    % the number of outputs module three is exactly \mthree
+			\pgfmathsetmacro\rintervalspace{1/(\m+1)}		
+			\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
+			in {1,...,\m}
+			\node[circle,draw,scale=0.1] (r\s-\i-output-\routput) at($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)  {};			
+		}
+		\fi
+      }
+      
 	}
 }
 

@@ -3,11 +3,14 @@
 \pdfminorversion=5 
 \pdfobjcompresslevel=2
 \documentclass{ltxdoc} % the pgf manual styles are based on ltxdoc
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{lmodern}
 
 %% Use the tikz package and loading the libraries
 \usepackage{tikz}
-\usetikzlibrary{calc,positioning,switching_architectures,decorations.pathreplacing}
+\usetikzlibrary{calc,positioning,decorations.pathreplacing,switching_architectures,}
 
 %% Loading only the package
 %\usepackage{sa-tikz}
@@ -39,7 +42,7 @@
 }
 \makeatother
 
-\RequirePackage{pgfmanual}
+\usepackage{pgfmanual}
 
 \pgfkeys{
     /pdflinks/search key prefixes in={/tikz/,/pgf/},
@@ -49,12 +52,12 @@
     /pdflinks/show labels=false,
 }
 \makeindex
-\newcommand{\version}{0.2}
-\newcommand{\versiondate}{06/12/2012}
+\newcommand{\version}{0.2a}
+\newcommand{\versiondate}{December 14, 2012}
 
 \title{\saTikZ\footnote{This package has version number \textit{v}\version\ of \versiondate; it is released under and subject to the \href{http://www.latex-project.org/lppl/}{\LaTeX\ Project Public License (LPPL)}.}}
 \author{Claudio Fiandrino \\ \small\href{mailto:claudio.fiandrino@gmail.com}{\texttt{claudio.fiandrino@gmail.com}}}
-\date{\today}
+\date{\versiondate}
 
 \begin{document}
 \maketitle
@@ -142,6 +145,13 @@ The simplest example of a Benes Network:
 \end{tikzpicture}
 \end{codeexample}
 is a Benes Network in which there are 8 input and output ports. 
+
+\begin{codeexample}[]
+\begin{tikzpicture}
+    \node[benes complete] {};
+\end{tikzpicture}
+\end{codeexample}
+
 \section{The options}
 \subsection{Designing choices - Clos Network}
 The two first important design parameters are the total number of input ports of the first stage and the total number of output ports of the last stage. These two parameters could be modified by means of:
@@ -434,7 +444,18 @@ An example with the default values:
     \node[clos example with labels] {};
 \end{tikzpicture}
 \end{codeexample}
-\pagebreak
+
+For automatically have labels in math mode, use:
+\begin{key}{/tikz/set math mode labels=\mchoice{true,false} (default false)}
+	This option is normally disabled |set math mode labels/.default=false|; to ensure labels be set completely in math mode is sufficient set |set math mode labels=true| before the type of the network.
+\end{key}
+
+An example with labels in math mode:
+\begin{codeexample}[]
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4, set math mode labels=true]
+    \node[clos example with labels] {};
+\end{tikzpicture}
+\end{codeexample}
 
 Here is an example with custom labels introduced by means of the |\tikzset| syntax.
 
