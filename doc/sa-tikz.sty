@@ -144,8 +144,15 @@
       module xsep/.store in=\modulexsep,%
 }%
 
+\pgfkeys{/tikz/.cd,%
+      module font/.initial=\normalfont,%
+      module font/.get=\modulefont,%
+      module font/.store in=\modulefont,%
+}%
+
 \tikzset{module/.style={%
 		draw,rectangle, minimum size=\modulesize,
+		font=\modulefont,
 	}
 }
 

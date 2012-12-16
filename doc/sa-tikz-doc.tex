@@ -158,6 +158,7 @@ is a Benes Network in which there are 8 input and output ports. To draw a Benes 
 \section{The options}
 \subsection{Designing choices - Clos Network}
 The two first important design parameters are the total number of input ports of the first stage and the total number of output ports of the last stage. These two parameters could be modified by means of:
+
 \begin{key}{/tikz/N=\marg{value} (initially 10)}
     This is the number of total input ports in the first stage.
 \end{key}
@@ -165,7 +166,9 @@ The two first important design parameters are the total number of input ports of
 \begin{key}{/tikz/M=\marg{value} (initially 10)}
     This is the number of total output ports in the last stage.
 \end{key}
+
 Usually, a second design parameter is the number of modules present in the first and last stage. \saTikZ\ defines:
+
 \begin{key}{/tikz/r1=\marg{value} (initially 5)}
     This is the number of total input ports in the first stage.
 \end{key}
@@ -173,6 +176,7 @@ Usually, a second design parameter is the number of modules present in the first
 \begin{key}{/tikz/r3=\marg{value} (initially 5)}
     This is the number of total output ports in the last stage.
 \end{key}
+
 The two design parameters provide the number of ports of each module:
 \[\textrm{m}_1=\dfrac{N}{r1} \hspace*{2cm} \textrm{m}_3=\dfrac{M}{r3} \]
 
@@ -199,6 +203,7 @@ Notice a very important thing: the type of the architecture should be loaded \em
 
 \subsection{Designing choices - Benes Network}
 Benes Networks are composed of $2 \times 2$ modules, so as design choice it just possible to select which is the number of input/output ports:
+
 \begin{key}{/tikz/P=\marg{value} (initially 8)}
     This is the number of total input/output ports in the first/third stage.
 \end{key}
@@ -208,6 +213,20 @@ Notice that |P| could assume values
 and the user is responsible to correctly set this parameter.
 
 For low values of $p$ there are no problems in visualizing the network, but as $p$ increases the user should take care of the dimension of the modules and the separation (vertical and horizontal) of the modules: it could be customized as explained in subsection \ref{subsec:customization}.
+
+Notice that actually, for |P|=4 the |benes| network and the |benes complete| network are indistinguishable:
+\begin{codeexample}[]
+\begin{tikzpicture}
+\tikzset{module size=0.5cm,
+ pin length factor=0.5,
+ module ysep=1}
+ \node[P=4,benes] {};
+ \begin{scope}[xshift=6cm]
+     \node[module xsep=2.5,P=4,benes complete]{};
+ \end{scope}
+\end{tikzpicture}
+\end{codeexample}
+
 
 Here is an example of Benes Network with |P|=16:
 \begin{codeexample}[]
@@ -243,6 +262,10 @@ This subsection focuses on how to customize the aspect of the drawing.
     This option allows to reduce/increase the length of the pins drawn in input/output. Use a \meta{value} [0,1] to reduce the length or, viceversa, a \meta{value} greater than 1 to increase the length.
 \end{key}
 
+\begin{key}{/tikz/module font=\marg{font commands} (default \cs{normalfont})}
+    This option sets the font used for module labels. The \meta{font commands} that could be used are those ones related to the font size (i.e. \cs{Large}) and font shape (i.e \cs{itshape}).
+\end{key}
+
 The following example shows a Rearrangeable Clos Network with some options modified. Notice that the |module label opacity| should be given as parameter of the desired network.
 
 \begin{codeexample}[]
@@ -255,8 +278,10 @@ The following example shows a Rearrangeable Clos Network with some options modif
 
 The options could also be introduced with the standard \Tikz\ syntax:
 \begin{command}{{\tikzset}\marg{options}}
-    Command that process the \meta{options}: they should be provided separated by a comma.
+    Command that process the various \meta{options}: they should be provided separated by a comma.
 \end{command}
+\pagebreak
+
 Therefore, the previous example could be modified into:
 \begin{codeexample}[]
 \tikzset{module size=0.5cm,pin length factor=0.5,
@@ -266,10 +291,10 @@ Therefore, the previous example could be modified into:
 \end{tikzpicture}
 \end{codeexample}
 
-Here is a Benes Network $4 \times 4$:
+Here is a Benes Network $4 \times 4$ with an extremely large font size for the module labels:
 \begin{codeexample}[]
-\begin{tikzpicture}[P=4]
-    \node[benes complete={module label opacity=0}] {};
+\begin{tikzpicture}[P=4, module font=\Huge\slshape]
+    \node[benes complete] {};
 \end{tikzpicture}
 \end{codeexample}
 
