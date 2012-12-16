@@ -52,8 +52,8 @@
     /pdflinks/show labels=false,
 }
 \makeindex
-\newcommand{\version}{0.2a}
-\newcommand{\versiondate}{December 14, 2012}
+\newcommand{\version}{0.2b}
+\newcommand{\versiondate}{December 16, 2012}
 
 \title{\saTikZ\footnote{This package has version number \textit{v}\version\ of \versiondate; it is released under and subject to the \href{http://www.latex-project.org/lppl/}{\LaTeX\ Project Public License (LPPL)}.}}
 \author{Claudio Fiandrino \\ \small\href{mailto:claudio.fiandrino@gmail.com}{\texttt{claudio.fiandrino@gmail.com}}}
@@ -98,6 +98,9 @@ with one of the following options
 \end{key}
 \begin{key}{/tikz/benes}
     Option for drawing a Benes Network.
+\end{key}
+\begin{key}{/tikz/benes complete}
+    Option for drawing a Benes Network with the lowest level of recursion.
 \end{key}
 inside a |tikzpicture| environment:
 \begin{environment}{{tikzpicture}\opt{\oarg{options}}}

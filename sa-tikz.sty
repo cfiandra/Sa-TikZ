@@ -1,10 +1,10 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.2a * * (C) Claudio Fiandrino 2012
+% Sa-TikZ package v0.2b * * (C) Claudio Fiandrino 2012
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sa-tikz}[2012/12/14 v0.2a Switching architectures design.]
+\ProvidesPackage{sa-tikz}[2012/12/16 v0.2b Switching architectures design.]
 \RequirePackage{tikz}
 \usetikzlibrary{calc,positioning,decorations.pathreplacing}
 
@@ -19,43 +19,70 @@
 }
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-% KEY DEFINITION
+% KEY DEFINITION - Design choices
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+% * * * * * * * * * * * * * * * * * *
+% CLOS
+% * * * * * * * * * * * * * * * * * *
+
 % N is the key representing the number of inputs x number of modules first stage
-\pgfmathtruncatemacro\N{10}%
-\pgfkeys{/tikz/.cd, N/.initial=10}%
-\pgfkeys{/tikz/.cd, N/.store in=\N}%
+\pgfkeys{/tikz/.cd,%
+      N/.initial=10,% 
+      N/.get=\N,%
+      N/.store in=\N,%
+}%
 
 % N label
-\def\Nlabel{N}%
-\pgfkeys{/tikz/.cd, N label/.store in=\Nlabel}%
+\pgfkeys{/tikz/.cd,%
+      N label/.initial=N,%
+      N label/.store in=\Nlabel,%
+      N label/.get=\Nlabel,%
+}%
 
 % r1 is the number of modules first stage
 % m1 is the number of inputs first stage per module
-\pgfmathtruncatemacro\rone{5}%
-\pgfkeys{/tikz/.cd, r1/.initial=5}%
-\pgfkeys{/tikz/.cd, r1/.store in=\rone}%
 
-% r1 and m1 label
-\def\ronelabel{r\ensuremath{_1}}%
-\pgfkeys{/tikz/.cd, r1 label/.store in=\ronelabel}%
-\def\monelabel{m\ensuremath{_1}}%
-\pgfkeys{/tikz/.cd, m1 label/.store in=\monelabel}%
+\pgfkeys{/tikz/.cd,%
+      r1/.initial=5,%
+      r1/.store in=\rone,%
+      r1/.get=\rone,%
+}%
+
+% r1 label
+\pgfkeys{/tikz/.cd,%
+      r1 label/.initial={r\ensuremath{_1}},%
+      r1 label/.store in=\ronelabel,%
+      r1 label/.get=\ronelabel,%
+}%
+
+% m1 label
+\pgfkeys{/tikz/.cd, 
+      m1 label/.initial={m\ensuremath{_1}},%
+      m1 label/.store in=\monelabel,%
+      m1 label/.get=\monelabel,%
+}%
 
 % r2 label
-\def\rtwolabel{r\ensuremath{_2}}%
-\pgfkeys{/tikz/.cd, r2 label/.store in=\rtwolabel}%
+\pgfkeys{/tikz/.cd,%
+      r2 label/.initial={r\ensuremath{_2}},%
+      r2 label/.store in=\rtwolabel,%
+      r2 label/.get=\rtwolabel,%
+}%
 
 % M is the key representing the number of inputs x number of modules last stage
-\pgfmathtruncatemacro\M{10}%
-\pgfkeys{/tikz/.cd, M/.initial=10}%
-\pgfkeys{/tikz/.cd, M/.store in=\M}%
+\pgfkeys{/tikz/.cd,%
+      M/.initial=10,% 
+      M/.get=\M,%
+      M/.store in=\M,%
+}%
 
 % M label
-\def\Mlabel{M}%
-\pgfkeys{/tikz/.cd, M label/.store in=\Mlabel}%
-
+\pgfkeys{/tikz/.cd,%
+      M label/.initial=M,%
+      M label/.store in=\Mlabel,%
+      M label/.get=\Mlabel,%
+}%
 
 % r3 is the number of modules last stage
 % m3 is the number of inputs last stage per module
@@ -63,23 +90,52 @@
 \pgfkeys{/tikz/.cd, r3/.initial=5}%
 \pgfkeys{/tikz/.cd, r3/.store in=\rthree}%
 
-% r3 and m3 label
-\def\rthreelabel{r\ensuremath{_3}}%
-\pgfkeys{/tikz/.cd, r3 label/.store in=\rthreelabel}%
-\def\mthreelabel{m\ensuremath{_3}}%
-\pgfkeys{/tikz/.cd, m3 label/.store in=\mthreelabel}%
+% r3 label
+\pgfkeys{/tikz/.cd,%
+      r3 label/.initial={r\ensuremath{_3}},%
+      r3 label/.store in=\rthreelabel,%
+      r3 label/.get=\rthreelabel,%
+}%
+
+% m3 label
+\pgfkeys{/tikz/.cd, 
+      m3 label/.initial={m\ensuremath{_3}},%
+      m3 label/.store in=\mthreelabel,%
+      m3 label/.get=\mthreelabel,%
+}%
+
+% * * * * * * * * * * * * * * * * * *
+% BENES
+% * * * * * * * * * * * * * * * * * *
+
+% P is the number of input/output ports
+\pgfkeys{/tikz/.cd,%
+      P/.initial=8,% 
+      P/.get=\P,%
+      P/.store in=\P,%
+}%
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-% GENERAL SETTINGS
+% GENERAL SETTINGS - Keys and styles
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-\pgfmathtruncatemacro{\modulesize}{1cm}
-\pgfkeys{/tikz/.cd, module size/.store in=\modulesize}%
 
-\pgfmathsetmacro{\moduleysep}{1.5}
-\pgfkeys{/tikz/.cd, module ysep/.store in=\moduleysep}%
+\pgfkeys{/tikz/.cd,%
+      module size/.initial={1cm},% 
+      module size/.get=\modulesize,%
+      module size/.store in=\modulesize,%
+}%
 
-\pgfmathsetmacro{\modulexsep}{3}
-\pgfkeys{/tikz/.cd, module xsep/.store in=\modulexsep}%
+\pgfkeys{/tikz/.cd,%
+      module ysep/.initial={1.5},% 
+      module ysep/.get=\moduleysep,%
+      module ysep/.store in=\moduleysep,%
+}%
+
+\pgfkeys{/tikz/.cd,%
+      module xsep/.initial={3},%
+      module xsep/.get=\modulexsep,%
+      module xsep/.store in=\modulexsep,%
+}%
 
 \tikzset{module/.style={%
 		draw,rectangle, minimum size=\modulesize,
@@ -92,30 +148,38 @@
 	module extensible/.default={\modulesize}
 }
 
-\pgfmathsetmacro{\modulelabelopacity}{1}
-\pgfkeys{/tikz/.cd, module label opacity/.store in=\modulelabelopacity}%
+\pgfkeys{/tikz/.cd,%
+      module label opacity/.initial={1},% 
+      module label opacity/.get=\modulelabelopacity,%
+      module label opacity/.store in=\modulelabelopacity,%
+}%
 
 \tikzset{module opacity/.style={
 		text opacity=\modulelabelopacity,
 	}
 }
 
-\pgfmathtruncatemacro{\pinlength}{1}
-\pgfkeys{/tikz/.cd, pin length factor/.store in=\pinlength}%
+\pgfkeys{/tikz/.cd,%
+      pin length factor/.initial={1},% 
+      pin length factor/.get=\pinlength,%
+      pin length factor/.store in=\pinlength,%
+}%
 
 \tikzset{math mode labels/.style={%
 		execute at begin node=$,%
       execute at end node=$,%
 	}
 }
-\pgfkeys{/tikz/.cd, use math mode labels/.is choice}%
-\pgfkeys{/tikz/.cd, use math mode labels/true/.style={math mode labels}}%
-\pgfkeys{/tikz/.cd, use math mode labels/false/.style={}}%
+\pgfkeys{/tikz/.cd,% 
+      use math mode labels/.is choice,%
+      use math mode labels/true/.style={math mode labels},%
+      use math mode labels/false/.style={},%
+}%
 
 \tikzset{set math mode labels/.style={%
-		use math mode labels=#1,
-	},
-	set math mode labels/.default=false,
+		use math mode labels=#1,%
+	   },%
+	   set math mode labels/.default=false,%
 }
 
 
@@ -394,8 +458,6 @@
 	}
 }
 
-
-
 \tikzset{clos rear example/.code={
 
       % Number of ports per module
@@ -587,11 +649,6 @@
 % BENES
 % uses modules 2x2
 
-% P is the number of input/output ports
-\pgfmathtruncatemacro\P{8}%
-\pgfkeys{/tikz/.cd, P/.initial=8}%
-\pgfkeys{/tikz/.cd, P/.store in=\P}%
-
 \tikzset{benes/.code={		
 
       % Number of ports per module
@@ -708,71 +765,71 @@
       \foreach \s [evaluate=\s as \numstage using int(\s-1)] in {1,...,\stages}{
       	\ifnum\s=1
       	% FIRST MODULE 
-		\foreach \i in {1,...,\r}{
-		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
-		  	in
-		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
-		  	
-		  	% INPUTS MODULE 1	
-		    % the number of inputs module one is exactly \mone
-			\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
-			\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
-			in {1,...,\m}
-			\draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
+		   \foreach \i in {1,...,\r}{
+		     	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		     	in
+		     	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(0,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		     	
+		     	% INPUTS MODULE 1	
+		       % the number of inputs module one is exactly \mone
+			   \pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+			   \foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] 
+			   in {1,...,\m}
+			   \draw ($(r1-\i.north west)!\roneinterval!(r1-\i.south west)-(0.5*\pinlength,0)$)node[scale=0.1](r1-\i-front input-\roneinput){}--($(r1-\i.north west)!\roneinterval!(r1-\i.south west)$) node[circle,draw,scale=0.1] (r1-\i-input-\roneinput) {};
 			
-			% OUTPUTS MODULE 1
-			% the number of outputs of module one is the number of modules stage 2
-			\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
-			\foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
-			in {1,...,\m}
-			\node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
-		}
+			   % OUTPUTS MODULE 1
+			   % the number of outputs of module one is the number of modules stage 2
+			   \pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+			   \foreach \roneoutput[evaluate=\roneoutput as \roneinterval using \roneintervalspace*\roneoutput] 
+			   in {1,...,\m}
+			   \node[circle,draw,scale=0.1] (r1-\i-output-\roneoutput)at($(r1-\i.north east)!\roneinterval!(r1-\i.south east)$)  {};
+		   }
       	\fi
-      	\ifnum\s=\stages
-		% FINAL MODULE 
-		\foreach \i in {1,...,\r}{
-		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
-		  	in
-		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
-		  	
-		  	% INPUTS MODULE \s
-			% the number of inputs of module three is the number of modules stage 2 \rtwo
-			\pgfmathsetmacro\rintervalspace{1/(\m+1)}
-			\foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
-			in {1,...,\m}
-			\node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
-		  	
-		  	% OUTPUTS MODULE \s
-		    % the number of outputs module three is exactly \mthree
-			\pgfmathsetmacro\rintervalspace{1/(\m+1)}		
-			\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
-			in {1,...,\m}
-			\draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r\s-\i-front output-\routput){}--($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$) node[circle,draw,scale=0.1] (r\s-\i-output-\routput) {};			
-		}
+      \ifnum\s=\stages
+		   % FINAL MODULE 
+		   \foreach \i in {1,...,\r}{
+		     	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		     	in
+		     	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		     	
+		     	% INPUTS MODULE \s
+			   % the number of inputs of module three is the number of modules stage 2 \rtwo
+			   \pgfmathsetmacro\rintervalspace{1/(\m+1)}
+			   \foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
+			   in {1,...,\m}
+			   \node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
+		     	
+		     	% OUTPUTS MODULE \s
+		       % the number of outputs module three is exactly \mthree
+			   \pgfmathsetmacro\rintervalspace{1/(\m+1)}		
+			   \foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
+			   in {1,...,\m}
+			   \draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*\pinlength,0)$)node[scale=0.1](r\s-\i-front output-\routput){}--($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$) node[circle,draw,scale=0.1] (r\s-\i-output-\routput) {};			
+		   }
 		\fi
 		\pgfmathparse{and(\s>1,\s<\stages)}
 		\let\cond\pgfmathresult
 		\ifnum\cond=1 
-		% INTERMEDIATE MODULEs 
-		\foreach \i in {1,...,\r}{
-		  	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
-		  	in
-		  	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
-		  	
-		  	% INPUTS MODULE \s
-			% the number of inputs of module three is the number of modules stage 2 \rtwo
-			\pgfmathsetmacro\rintervalspace{1/(\m+1)}
-			\foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
-			in {1,...,\m}
-			\node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
-		  	
-		  	% OUTPUTS MODULE \s
-		    % the number of outputs module three is exactly \mthree
-			\pgfmathsetmacro\rintervalspace{1/(\m+1)}		
-			\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
-			in {1,...,\m}
-			\node[circle,draw,scale=0.1] (r\s-\i-output-\routput) at($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)  {};			
-		}
+		   % INTERMEDIATE MODULEs 
+		   \foreach \i in {1,...,\r}{
+		     	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
+		     	in
+		     	node[module,#1,module opacity,yshift=1cm]  (r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+		     	
+		     	% INPUTS MODULE \s
+			   % the number of inputs of module three is the number of modules stage 2 \rtwo
+			   \pgfmathsetmacro\rintervalspace{1/(\m+1)}
+			   \foreach \rinput[evaluate=\rinput as \rinterval using \rintervalspace*\rinput] 
+			   in {1,...,\m}
+			   \node[circle,draw,scale=0.1] (r\s-\i-input-\rinput)at($(r\s-\i.north west)!\rinterval!(r\s-\i.south west)$)  {};
+		     	
+		     	% OUTPUTS MODULE \s
+		       % the number of outputs module three is exactly \mthree
+			   \pgfmathsetmacro\rintervalspace{1/(\m+1)}		
+			   \foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] 
+			   in {1,...,\m}
+			   \node[circle,draw,scale=0.1] (r\s-\i-output-\routput) at($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)  {};			
+		   }
 		\fi
       }
       
