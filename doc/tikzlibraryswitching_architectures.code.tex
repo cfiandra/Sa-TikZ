@@ -9,9 +9,16 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 \def\CalcHeight(#1,#2)#3{%
-\pgfpointdiff{\pgfpointanchor{#1}{south west}}{\pgfpointanchor{#2}{north west}}
-\pgfmathsetmacro{\myheight}{veclen(\pgf@x,\pgf@y)}
-\global\expandafter\edef\csname #3\endcsname{\myheight}
+   \pgfpointdiff{\pgfpointanchor{#1}{south west}}{\pgfpointanchor{#2}{north west}}
+   \pgfmathsetmacro{\myheight}{veclen(\pgf@x,\pgf@y)}
+   \global\expandafter\edef\csname #3\endcsname{\myheight}
+}
+
+% PGFMATHISODD: 1 = true, 0 = false
+\newcommand*{\pgfmathisodd}[2]{
+   \pgfmathparse{mod(#1,2)} 
+   \pgfmathtruncatemacro\res\pgfmathresult
+   \global\expandafter\edef\csname #2\endcsname{\res}
 }
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -162,9 +169,9 @@
 }%
 
 \tikzset{math mode labels/.style={%
-		execute at begin node=$,%
+      execute at begin node=$,%
       execute at end node=$,%
-	}
+   }
 }
 \pgfkeys{/tikz/.cd,% 
       use math mode labels/.is choice,%
@@ -173,9 +180,9 @@
 }%
 
 \tikzset{set math mode labels/.style={%
-		use math mode labels=#1,%
-	   },%
-	   set math mode labels/.default=false,%
+      use math mode labels=#1,%
+      },%
+      set math mode labels/.default=false,%
 }
 
 
@@ -828,7 +835,86 @@
 		   }
 		\fi
       }
+      % end modules
       
+      % CONNECTIONS (to be completed: now it works with P<=8)
+      
+      % * * * *
+      % First stage
+      
+      \foreach \startmodule in {1,...,\r}{      
+         \pgfmathisodd{\startmodule}{initmodule}
+	      \ifnum\initmodule=1
+	         % if odd
+	         \pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
+	         \pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\r)/2)}
+	         \draw(r1-\startmodule-output-1)--(r2-\endmodulei-input-1);
+	         \draw(r1-\startmodule-output-2)--(r2-\endmoduleii-input-1);
+	      \else
+	         % if even
+	         \pgfmathtruncatemacro\endmodulei{int((\startmodule)/2)}
+	         \pgfmathtruncatemacro\endmoduleii{int((\startmodule+\r)/2)}
+	         \draw(r1-\startmodule-output-1)--(r2-\endmodulei-input-2);
+	         \draw(r1-\startmodule-output-2)--(r2-\endmoduleii-input-2);
+	      \fi	      
+      }
+      
+      % * * * *
+      % Last stage 
+      % reminder: exactly as the first stage, "with xscale=-1"
+      
+      \pgfmathtruncatemacro\lastsecondstage{int(\stages-1)}
+      
+      \foreach \startmodule in {1,...,\r}{      
+         \pgfmathisodd{\startmodule}{initmodule}
+	      \ifnum\initmodule=1
+	         % if odd
+	         \pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
+	         \pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\r)/2)}
+	         \draw(r\stages-\startmodule-input-1)--(r\lastsecondstage-\endmodulei-output-1);
+	         \draw(r\stages-\startmodule-input-2)--(r\lastsecondstage-\endmoduleii-output-1);
+	      \else
+	         % if even
+	         \pgfmathtruncatemacro\endmodulei{int((\startmodule)/2)}
+	         \pgfmathtruncatemacro\endmoduleii{int((\startmodule+\r)/2)}
+	         \draw(r\stages-\startmodule-input-1)--(r\lastsecondstage-\endmodulei-output-2);
+	         \draw(r\stages-\startmodule-input-2)--(r\lastsecondstage-\endmoduleii-output-2);
+	      \fi	      
+      }
+      
+      % * * * *
+      % 2 Intermediate stages (just in case P>4)
+      
+      \ifnum\P>4
+      % Compute \stages/2
+      \pgfmathparse{floor(divide(\stages,2))}
+      \pgfmathtruncatemacro\middlestage{\pgfmathresult}
+      \pgfmathtruncatemacro\middlestagei{int(\middlestage+1)}
+      \pgfmathtruncatemacro\middlestageii{int(\middlestagei+1)}
+      
+      % Drawing
+		\foreach \startmodule in {1,...,\r}{
+	   \pgfmathisodd{\startmodule}{initmodule}
+	   \ifnum\initmodule=1
+	      % if odd
+	      \pgfmathtruncatemacro\endmodule{int(\startmodule+1)}
+			\draw(r\middlestage-\startmodule-output-1)--(r\middlestagei-\startmodule-input-1);
+			\draw(r\middlestage-\startmodule-output-2)--(r\middlestagei-\endmodule-input-1);
+			\draw(r\middlestagei-\startmodule-output-1)--(r\middlestageii-\startmodule-input-1);
+			\draw(r\middlestagei-\startmodule-output-2)--(r\middlestageii-\endmodule-input-1);
+		\else
+		   % if even
+		   \pgfmathtruncatemacro\endmodule{int(\startmodule-1)}
+			\draw(r\middlestage-\startmodule-output-1)--(r\middlestagei-\endmodule-input-2);
+			\draw(r\middlestage-\startmodule-output-2)--(r\middlestagei-\startmodule-input-2);
+			\draw(r\middlestagei-\startmodule-output-1)--(r\middlestageii-\endmodule-input-2);
+			\draw(r\middlestagei-\startmodule-output-2)--(r\middlestageii-\startmodule-input-2);
+		\fi
+		}
+		\fi
+		
+		
+		% end connections
 	}
 }
 

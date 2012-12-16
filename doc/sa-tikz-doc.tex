@@ -139,7 +139,7 @@ Notice from the examples that automatically the library is able to compute the c
 \end{itemize}
 Each module of the network is numbered according to the stage it belongs to.
 
-\subsection{Example of Benes Network}
+\subsection{Examples of Benes Networks}
 
 The simplest example of a Benes Network:
 \begin{codeexample}[]
@@ -147,7 +147,7 @@ The simplest example of a Benes Network:
     \node[benes] {};
 \end{tikzpicture}
 \end{codeexample}
-is a Benes Network in which there are 8 input and output ports. 
+is a Benes Network in which there are 8 input and output ports. To draw a Benes Network in which all modules are visible, the key |benes complete| should be used rather than the |benes| key. An example:
 
 \begin{codeexample}[]
 \begin{tikzpicture}
@@ -265,6 +265,14 @@ Therefore, the previous example could be modified into:
     \node[clos rear={module label opacity=0}] {};
 \end{tikzpicture}
 \end{codeexample}
+
+Here is a Benes Network $4 \times 4$:
+\begin{codeexample}[]
+\begin{tikzpicture}[P=4]
+    \node[benes complete={module label opacity=0}] {};
+\end{tikzpicture}
+\end{codeexample}
+
 An example of Benes Network $32 \times 32$:
 \begin{codeexample}[]
 \tikzset{module size=0.6cm,pin length factor=0.6,
@@ -273,6 +281,15 @@ An example of Benes Network $32 \times 32$:
     \node[benes] {};
 \end{tikzpicture}
 \end{codeexample}
+and its complete form:
+\begin{codeexample}[]
+\tikzset{module size=0.6cm,pin length factor=0.6,
+         module ysep=1, module xsep=2.275,}
+\begin{tikzpicture}[P=32]
+    \node[benes complete] {};
+\end{tikzpicture}
+\end{codeexample}
+
 
 \section{Advanced usage}
 In this section some more advanced examples are shown.
