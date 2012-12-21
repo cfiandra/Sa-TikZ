@@ -30,10 +30,24 @@ Example of network with labels:
 \end{tikzpicture}
 \end{center}
 
+A simple Benes Network:
+
 \begin{center}
 \begin{tikzpicture}
 \node[P=4,benes={module label opacity=0}]{};
 \end{tikzpicture}
 \end{center}
+
+A very complicated Benes Network complete $256\times 256$:
+\begin{center}
+\tikzset{module size=0.45cm,pin length factor=0.3,
+module ysep=0.775, module xsep=4}
+\scalebox{0.425}{
+\begin{tikzpicture}
+\node[P=128,benes complete]{};
+\end{tikzpicture}
+}
+\end{center}
+
 
 \end{document}

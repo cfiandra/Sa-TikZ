@@ -10,7 +10,7 @@
 
 %% Use the tikz package and loading the libraries
 \usepackage{tikz}
-\usetikzlibrary{calc,positioning,decorations.pathreplacing,switching_architectures,}
+\usetikzlibrary{calc,positioning,decorations.pathreplacing,switching_architectures}
 
 %% Loading only the package
 %\usepackage{sa-tikz}
@@ -266,6 +266,10 @@ This subsection focuses on how to customize the aspect of the drawing.
     This option sets the font used for module labels. The \meta{font commands} that could be used are those ones related to the font size (i.e. \cs{Large}) and font shape (i.e \cs{itshape}).
 \end{key}
 
+\begin{key}{/tikz/connections disabled=\mchoice{true,false} (default false)}
+	This option, not active by default |connections disabled/.default=false|, allows to remove the connections between the stages when set to \opt{true}. Beware: this option is valid only for |clos snb|, |clos rear|, |benes| and |benes complete| networks.
+\end{key}
+
 The following example shows a Rearrangeable Clos Network with some options modified. Notice that the |module label opacity| should be given as parameter of the desired network.
 
 \begin{codeexample}[]
@@ -291,9 +295,36 @@ Therefore, the previous example could be modified into:
 \end{tikzpicture}
 \end{codeexample}
 
-Here is a Benes Network $4 \times 4$ with an extremely large font size for the module labels:
+It is also possible to declare \opt{styles} to set some options for later use: this helps to keep the code clean especially when the same options are re-used several times; an example:
+\begin{codeexample}[code only]
+\tikzset{module size definition/.style={
+  module size=0.75cm,
+  pin length factor=0.75,
+  module xsep=2,
+  module ysep=2,
+  }
+}
+\tikzset{module size definition, 
+ P=16,
+}
+\begin{tikzpicture}
+    \node[benes] {};
+\end{tikzpicture}
+\end{codeexample}
+
+Here is a Benes Network $4 \times 4$ with an extremely large font size for the module labels with the connections disabled:
 \begin{codeexample}[]
-\begin{tikzpicture}[P=4, module font=\Huge\slshape]
+\tikzset{my style/.style={
+  module size=0.75cm,
+  pin length factor=0.75,
+  module xsep=2,
+  }
+}
+\tikzset{my style, P=4, 
+ module font=\huge\slshape, 
+ connections disabled=true
+}
+\begin{tikzpicture}
     \node[benes complete] {};
 \end{tikzpicture}
 \end{codeexample}
@@ -309,9 +340,9 @@ An example of Benes Network $32 \times 32$:
 and its complete form:
 \begin{codeexample}[]
 \tikzset{module size=0.6cm,pin length factor=0.6,
-         module ysep=1, module xsep=2.275,}
+         module ysep=1, module xsep=2.275}
 \begin{tikzpicture}[P=32]
-    \node[benes complete] {};
+    \node[benes complete={module label opacity=0}] {};
 \end{tikzpicture}
 \end{codeexample}
 
