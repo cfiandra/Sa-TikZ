@@ -1,10 +1,10 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.3 * * (C) Claudio Fiandrino 2012
+% Sa-TikZ package v0.4 * * (C) Claudio Fiandrino 2012
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sa-tikz}[2012/12/21 v0.3 Switching architectures design.]
+\ProvidesPackage{sa-tikz}[2012/12/31 v0.4 Switching architectures design.]
 \RequirePackage{tikz}
 \usetikzlibrary{calc,positioning,decorations.pathreplacing}
 
@@ -844,7 +844,7 @@
 		\fi
 		\pgfmathparse{and(\s>1,\s<\stages)}
 		\let\cond\pgfmathresult
-		\ifnum\cond=1 
+		\ifnum\cond=1
 		   % INTERMEDIATE MODULEs 
 		   \foreach \i in {1,...,\r}{
 		     	\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep}
@@ -895,7 +895,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2)}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2)}
 			          	\draw(r\stg-\startmodule-output-1)--(r\nextstg-\endmodulei-input-1);
 			          	\draw(r\stg-\startmodule-output-2)--(r\nextstg-\endmoduleii-input-1);
 			          \else
@@ -910,7 +910,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2))}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2+(\applicationon/2))}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2))}
 			          	\draw(r\stg-\startmodule-output-1)--(r\nextstg-\endmodulei-input-1);
 			          	\draw(r\stg-\startmodule-output-2)--(r\nextstg-\endmoduleii-input-1);
 			          \else
@@ -925,7 +925,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
 			          	\draw(r\stg-\startmodule-output-1)--(r\nextstg-\endmodulei-input-1);
 			          	\draw(r\stg-\startmodule-output-2)--(r\nextstg-\endmoduleii-input-1);
 			          \else
@@ -955,7 +955,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2)}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2)}
 			          	\draw(r\currstg-\startmodule-input-1)--(r\nextstg-\endmodulei-output-1);
 			          	\draw(r\currstg-\startmodule-input-2)--(r\nextstg-\endmoduleii-output-1);
 			          \else
@@ -970,7 +970,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2))}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2+(\applicationon/2))}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2))}
 			          	\draw(r\currstg-\startmodule-input-1)--(r\nextstg-\endmodulei-output-1);
 			          	\draw(r\currstg-\startmodule-input-2)--(r\nextstg-\endmoduleii-output-1);
 			          \else
@@ -985,7 +985,7 @@
 			         \ifnum\initmodule=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
-			          	\pgfmathtruncatemacro\endmoduleii{int(ceil(\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
+			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
 			          	\draw(r\currstg-\startmodule-input-1)--(r\nextstg-\endmodulei-output-1);
 			          	\draw(r\currstg-\startmodule-input-2)--(r\nextstg-\endmoduleii-output-1);
 			          \else
@@ -995,9 +995,9 @@
 			          	\draw(r\currstg-\startmodule-input-1)--(r\nextstg-\endmodulei-output-2);
 			          	\draw(r\currstg-\startmodule-input-2)--(r\nextstg-\endmoduleii-output-2);
 			         \fi
-			      \fi	      
+			      \fi
 	         	}
-         	}          	
+         	}
          }
          
       \fi
@@ -1032,7 +1032,7 @@
 		   \fi
 	   }
 		% end connections
-		\fi
+		\fi % disable connections
 	}
 }
 
