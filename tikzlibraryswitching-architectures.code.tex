@@ -1,6 +1,6 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.4 * * (C) Claudio Fiandrino 2012
+% Sa-TikZ package v0.5 * * (C) Claudio Fiandrino 2012
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -14,13 +14,16 @@
 % UTILITY
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-\def\CalcHeight(#1,#2)#3{%
-   \pgfpointdiff{\pgfpointanchor{#1}{south west}}{\pgfpointanchor{#2}{north west}}
-   \pgfmathsetmacro{\myheight}{veclen(\pgf@x,\pgf@y)}
-   \global\expandafter\edef\csname #3\endcsname{\myheight}
-}
-
 % PGFMATHISODD: 1 = true, 0 = false
+%
+% #1: number to be checked
+% #2: output macro
+%
+% example: 
+%% \pgfmathisodd{32}{output} 
+%% \ifnum\output=1
+%% \node{\output};
+%% \fi
 \newcommand*{\pgfmathisodd}[2]{
    \pgfmathparse{mod(#1,2)} 
    \pgfmathtruncatemacro\res\pgfmathresult

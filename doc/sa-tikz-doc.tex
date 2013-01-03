@@ -1,15 +1,13 @@
-% to allow compression of cross references. 
-% both pgfmanual and pgfplots manual would be MUCH larger without it.
 \pdfminorversion=5 
 \pdfobjcompresslevel=2
-\documentclass{ltxdoc} % the pgf manual styles are based on ltxdoc
+\documentclass{ltxdoc}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{lmodern}
 \usepackage[ruled, lined,linesnumbered]{algorithm2e}
 
-%% Use the tikz package and loading the libraries
+%% Use the tikz package and loading the library
 \usepackage{tikz}
 \usetikzlibrary{switching-architectures}
 
@@ -31,7 +29,7 @@
 
 % dedicated commands:
 \newcommand\Tikz{Ti\textit kZ}
-\newcommand{\saTikZ}{\textsc S\textit a-\Tikz}
+\newcommand{\saTikZ}{S\textit{a}-\Tikz}
 
 \def\pgfautoxrefs{1}
 \input ./macros/pgfmanual-en-macros.tex
@@ -52,8 +50,8 @@
     /pdflinks/show labels=false,
 }
 \makeindex
-\newcommand{\version}{0.4}
-\newcommand{\versiondate}{December 31, 2012}
+\newcommand{\version}{0.5}
+\newcommand{\versiondate}{January 3, 2013}
 
 \title{\saTikZ\footnote{This package has version number \textit{v}\version\ of \versiondate; it is released under and subject to the \href{http://www.latex-project.org/lppl/}{\LaTeX\ Project Public License (LPPL)}.}}
 \author{Claudio Fiandrino \\ \small\href{mailto:claudio.fiandrino@gmail.com}{\texttt{claudio.fiandrino@gmail.com}}}
@@ -65,9 +63,9 @@
 
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
-The \saTikZ\ library helps in drawing \emph{switching-architectures}. In particular, one of its aims, is to help students to verify if their exercises are correct, but it could also help teachers in preparing lecture notes. The repository of the library is \href{https://github.com/cfiandra/Sa-TikZ}{https://github.com/cfiandra/Sa-TikZ}.
+The \saTikZ\ library helps in drawing \emph{switching-architectures}. In particular, one of its aims, is to help students to verify the correctness of their exercises, but it could also help teachers in preparing lecture notes. The repository of the library is \href{https://github.com/cfiandra/Sa-TikZ}{https://github.com/cfiandra/Sa-TikZ}.
 
-The \saTikZ\ library can be loaded by means of:
+The \saTikZ\ library can be loaded in the preamble by means of:
 \begin{flushleft}
 \verb|\usetikzlibrary{|\bgroup\color{red!75!black}\verb|switching-architectures|\egroup\verb|}|
 \end{flushleft}
@@ -180,15 +178,15 @@ The two first important design parameters are the total number of input ports of
 Usually, a second design parameter is the number of modules present in the first and last stage. \saTikZ\ defines:
 
 \begin{key}{/tikz/r1=\marg{value} (initially 5)}
-    This is the number of total input ports in the first stage.
+    This is the number of modules in the first stage.
 \end{key}
 
 \begin{key}{/tikz/r3=\marg{value} (initially 5)}
-    This is the number of total output ports in the last stage.
+    This is the number of modules in the last stage.
 \end{key}
 
 The two design parameters provide the number of ports of each module:
-\[m_1=\dfrac{N}{r1} \hspace*{2cm} m_3=\dfrac{M}{r3} \]
+\[m_1=\dfrac{N}{r_1} \hspace*{2cm} m_3=\dfrac{M}{r_3} \]
 
 Some examples considering |N|=9, |r1|=3, |M|=9 and |r3|=3.
 \begin{codeexample}[]
@@ -246,12 +244,12 @@ Here is an example of Benes Network with |P|=16:
 \end{tikzpicture}
 \end{codeexample}
 
-It holds the same thing already said for Clos Networks: set the parameter |P| before declaring the \cs{node} be a |Benes| Network.
+It holds the same concept already said for Clos Networks: set the parameter |P| before declaring the \cs{node} be a |Benes| Network.
 
 
 \subsection{Output customization}
 \label{subsec:customization}
-This subsection focuses on how to customize the aspect of the drawing.
+This subsection focuses on how to customize the aspect of the networks.
 
 \begin{key}{/tikz/module size=\marg{value} (initially 1cm)}
     This option allows to set the module dimension.
@@ -278,10 +276,10 @@ This subsection focuses on how to customize the aspect of the drawing.
 \end{key}
 
 \begin{key}{/tikz/connections disabled=\mchoice{true,false} (default false)}
-	This option, not active by default |connections disabled/.default=false|, allows to remove the connections between the stages when set to \opt{true}. Beware: this option is valid only for |clos snb|, |clos rear|, |benes| and |benes complete| networks.
+	This option, not active by default |connections disabled/.default=false|, allows to remove the connections between the stages when it is set to \opt{true}. Beware: this option is valid only for |clos snb|, |clos rear|, |benes| and |benes complete| networks, but it does not holds for the architectures explained in section \ref{sec:dida}.
 \end{key}
 
-The following example shows a Rearrangeable Clos Network with some options modified. Notice that the |module label opacity| should be given as parameter of the desired network.
+The following example shows a Rearrangeable Clos Network with some options customized. Notice that the |module label opacity| should be given as parameter of the desired network.
 
 \begin{codeexample}[]
 \begin{tikzpicture}[N=9,r1=3,M=9,r3=3]
@@ -293,9 +291,8 @@ The following example shows a Rearrangeable Clos Network with some options modif
 
 The options could also be introduced with the standard \Tikz\ syntax:
 \begin{command}{{\tikzset}\marg{options}}
-    Command that process the various \meta{options}: they should be provided separated by a comma.
+    Command that process the various \meta{options}: they should be provided separated by commas.
 \end{command}
-
 
 Therefore, the previous example could be modified into:
 \begin{codeexample}[]
@@ -339,6 +336,7 @@ Here is a Benes Network $4 \times 4$ with an extremely large font size for the m
     \node[benes complete] {};
 \end{tikzpicture}
 \end{codeexample}
+\pagebreak
 
 An example of Benes Network $32 \times 32$:
 \begin{codeexample}[]
@@ -348,6 +346,8 @@ An example of Benes Network $32 \times 32$:
     \node[benes] {};
 \end{tikzpicture}
 \end{codeexample}
+\pagebreak
+
 and its complete form:
 \begin{codeexample}[]
 \tikzset{module size=0.6cm,pin length factor=0.6,
@@ -427,7 +427,7 @@ The same applies also for Benes Networks:
 and for the complete form:
 \begin{codeexample}[]
 \begin{tikzpicture}
-    \node[benes complete={module label opacity=0}] {};
+	\node[benes complete={module label opacity=0}] {};
 	\newcounter{port}
 	\setcounter{port}{0}
 	\foreach \startmodule in {1,...,4}{
@@ -491,7 +491,7 @@ and in its complete form:
     	(r3-3-input-1)--(r3-3-output-2)--
     	(r4-4-input-1)--(r4-4-output-1)--
     	(r5-3-input-2)--(r5-3-output-2);
-   	\draw[red,ultra thick](r1-4-input-1)--(r1-4-output-1)-- 
+   	\draw[blue,ultra thick](r1-4-input-1)--(r1-4-output-1)-- 
     	(r2-2-input-2)--(r2-2-output-1)--
     	(r3-1-input-2)--(r3-1-output-1)--
     	(r4-1-input-1)--(r4-1-output-1)--
@@ -500,6 +500,7 @@ and in its complete form:
 \end{codeexample}
 
 \section{Didactic purposes}
+\label{sec:dida}
 To quickly draw a Clos Network  it is possible to exploit:
 \begin{key}{/tikz/clos snb example}
     Option for quickly drawing a Clos Network Strictly-non-Blocking.
@@ -509,14 +510,14 @@ To quickly draw a Clos Network  it is possible to exploit:
 \end{key}
 In this way the network is not seen in its whole complexity, but it is synthetically  depicted. An example of a Strictly-non-Blocking Clos Network drawn with this approach:
 \begin{codeexample}[]
-\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+\begin{tikzpicture}[N=12,r1=4,M=8,r3=4]
     \node[clos snb example] {};
 \end{tikzpicture}
 \end{codeexample}
 
 Similarly, an example of a Rearrangeable Clos Network:
 \begin{codeexample}[]
-\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+\begin{tikzpicture}[N=12,r1=4,M=8,r3=4]
     \node[clos rear example] {};
 \end{tikzpicture}
 \end{codeexample}
@@ -556,10 +557,11 @@ The labels could be customized by means of:
     This options sets the label representing the number of ports per module in the last stage.
 \end{key}
 
-An example with the default values:
+An example with the default values for the labels:
 
 \begin{codeexample}[]
-\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+%\tikzset{N=8,r1=4,M=8,r3=4} % setting the parameters here is useless
+\begin{tikzpicture}
     \node[clos example with labels] {};
 \end{tikzpicture}
 \end{codeexample}
@@ -571,7 +573,7 @@ To have automatically all labels in math mode, use:
 
 An example:
 \begin{codeexample}[]
-\begin{tikzpicture}[N=8,r1=4,M=8,r3=4, set math mode labels=true]
+\begin{tikzpicture}[set math mode labels=true]
     \node[clos example with labels] {};
 \end{tikzpicture}
 \end{codeexample}
@@ -581,11 +583,28 @@ This example, instead, represents a |clos example with labels| network with cust
 \begin{codeexample}[]
 \tikzset{N label={p$_1$ $\times$ q$_1$},M label={p$_3$ $\times$ q$_3$}, 
 r1 label=p$_1$, m1 label=q$_1$, r2 label=p$_2$,r3 label=p$_3$, m3 label=q$_3$}
-\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+\begin{tikzpicture}
     \node[clos example with labels] {};
 \end{tikzpicture}
 \end{codeexample}
 
+Notice that it does not exist an equivalent of |clos example with labels| or |clos rear example| for Benes Networks: this because Benes Networks are a particular type of Rearrangeable Clos Networks where |P|=|N|=|M| and $m1$=$m3$=$z$=2, thus |r1|=|r3|=$q=P/z$.
+
+For example:
+
+\begin{codeexample}[]
+\begin{tikzpicture}[N=8,r1=4,M=8,r3=4]
+    \node[clos rear example] {};
+\end{tikzpicture}
+\end{codeexample}
+
+\begin{codeexample}[]
+\tikzset{N label={P},M label={P}, 
+r1 label=q, m1 label=z, r2 label=z,r3 label=q, m3 label=z}
+\begin{tikzpicture}
+    \node[set math mode labels=true,clos example with labels] {};
+\end{tikzpicture}
+\end{codeexample}
 
 \clearpage
 \appendix
@@ -600,7 +619,7 @@ To explain how the connections of the |benes complete| networks are drawn, the f
 	\end{tikzpicture}
 }
 \end{center}
-The network is $16\times 16$, thus the number of stages $\mathcal{S}$ is:
+The network is $16\times 16$ (|P|=16), thus the number of stages $\mathcal{S}$ is:
 \[\mathcal{S}=2\log_2{P}-1 \implies \mathcal{S}_{16}=7\]
 Indeed:
 \begin{center}
@@ -613,7 +632,8 @@ Indeed:
 	\end{tikzpicture}
 }
 \end{center}
-This parameter, therefore, allows to correctly draw all the modules of the network and, as it will be pointed out later better, its knowledge is important also to define the range of applicability of the algorithm. Notice the network symmetry: the connections from stage 1 to stage 4 are exactly the same from stage 7 to stage 4.  
+This parameter, therefore, allows to correctly draw all the modules of the network and, as it will be pointed out later better, its knowledge is important also to define the stages range of applicability of the algorithm. Notice the network symmetry: the connections from stage 1 to stage 4 are exactly the same from stage 7 to stage 4.  
+\pagebreak
 
 The first step is \emph{labelling} modules and ports. \saTikZ\ uses this philosophy:
 \begin{itemize}
@@ -675,6 +695,7 @@ Due to the network symmetry, at the beginning the attention will be focused only
 	\end{tikzpicture}
 }
 \end{center}
+\pagebreak
 
 Now, by drawing some connections, it is possible to find a common behaviour:
 
@@ -734,12 +755,12 @@ Now, by drawing some connections, it is possible to find a common behaviour:
 \[\textrm{end module}=\dfrac{st+\gamma}{2}\; , \; \textrm{port}=2 \]
 \end{itemize}
 
-What is the term $\gamma$? It is a corrective term that depends on the starting stage. Consider indeed the connection of the output port 2 of the module 1 for the first and the second stage:
+What is the term $\gamma$? It is a corrective term that depends on the starting stage. Consider indeed the connections of the output port 2 of the module 1 for the first and the second starting stages:
 \begin{flushleft}
 \texttt{r1-1-output-2} \tikz[baseline=-0.5ex]\draw[-stealth](0,0)--(0.5,0); \texttt{r2-5-input-1}\\
 \texttt{r2-1-output-2} \tikz[baseline=-0.5ex]\draw[-stealth](0,0)--(0.5,0); \texttt{r3-3-input-1}
 \end{flushleft}
-In the first case it points to module 5 while in the second case to module 3, thus in the first case $\gamma=8$ and in the second case $\gamma=4$. This suggest that $\gamma$ is related in some sense to the stage of the start module: in the example |P|=16 and there are 8 modules so the relation is
+In the first case it points to module 5 while in the second case to module 3, thus in the first case $\gamma=8$ and in the second case $\gamma=4$. This suggest that $\gamma$ is related in some sense to the stage of the start module: in the example |P|=16 so the relation is
 \[\gamma=\dfrac{P}{2^{stage}}\]
 
 Following this strategy, however, allows to draw just part of the connections:
@@ -794,7 +815,7 @@ thus it is possible to claim that the algorithm has a \emph{module applicability
 \item in the second stage it could be applied for half of the modules;
 \item in the third stage it could be applied just for two modules.
 \end{itemize}
-But, in the first stage $\gamma=8$, in the second stage $\gamma=4$ and in the third stage $\gamma=2$: this means that $\gamma$ defines the \emph{module applicability range}.
+But, in the first stage $\gamma=8$ ($P/2^1$), in the second stage $\gamma=4$ ($P/2^2$) and in the third stage $\gamma=2$ ($P/2^3$): this means that $\gamma$ defines the \emph{module applicability range}.
 
 Notice now, that actually for the second stage and the third stage, the algorithm should be simply repeated:
 \begin{itemize}
@@ -803,7 +824,10 @@ Notice now, that actually for the second stage and the third stage, the algorith
 \end{itemize}
 The repetition $\psi$ depends on the stage with this relation:
 \[\psi= 2^{stage-1}\]
-Now, to draw automatically all the connections, the algorithm should know which are the starting module and ending module of the \emph{module applicability range} during the repetitions: for example, in the second stage, how to identify automatically the applicability range \texttt{1-4}, \texttt{5-8}? They could be defined as:
+Now, to draw automatically all the connections, the algorithm should know which are the starting module and ending module of the \emph{module applicability range} during the repetitions: for example, in the second stage, how to identify automatically the applicability range \texttt{1-4}, \texttt{5-8}? 
+\pagebreak
+
+They could be defined as:
 \begin{itemize}
 \item starting module: $st_m=1+(\psi-1)\cdot\gamma $;
 \item ending module: $end_m=(st_m+\gamma)-1$.
@@ -813,7 +837,7 @@ Indeed for the second stage we have that $\gamma=4$ and $\psi=2\implies \{1,\, 2
 \item starting modules: $st_{m_1}=1+(1-1)\cdot 4=1$ and $st_{m_2}=1+(2-1)\cdot 4=5$;
 \item ending modules:  $end_{m_1}=(1+4)-1=4$ and $end_{m_2}=(5+4)-1=8$.
 \end{itemize}
-Unfortunately, just the knowledge of the starting and ending modules per stage is not sufficient to reach the goal: this because the algorithm works and draws the connections perfectly when the module labels start with 1, but during the repetitions the new starting module labels are different, so the computation of the end connection point fails. This difference should be compensated with \emph{shifts} of the ending modules that depend on the level of repetition. The rules are:
+Unfortunately, the knowledge of the starting and ending modules per stage is not sufficient to reach the goal: this because the algorithm works and draws the connections perfectly when the module labels start with 1, but during the repetitions the new starting module labels are different, so the computation of the end connection point fails. This difference should be compensated with \emph{shifts} of the ending modules that depend on the level of repetition. The rules are:
 \begin{itemize}
 \item if $\psi=1$ (the algorithm works for all modules of the stage), then the ending module of the connection is computed as:
 \begin{itemize}
@@ -878,11 +902,11 @@ compute $I_2=\mathcal{S}-(I_1-1)$\;
 \For{$stg\leftarrow 1$ \KwTo $(I_1-1)$}{
 	compute $\gamma=P\div 2^{stg}$\;
 	compute $\psi=2^{stg-1}$\;
-	\For{$rep\leftarrow 1$ \KwTo $\psi$}{
-		compute starting point $x=1+((rep-1)\cdot\gamma)$\;
+	\For{$t\leftarrow 1$ \KwTo $\psi$}{
+		compute starting point $x=1+((t-1)\cdot\gamma)$\;
 		compute ending point $y=(x+\gamma)-1$\;
 		\ForEach{$\textrm{ start module } s \textrm{ in set } (x,y)$}{
-			\uIf{$rep==1$}{
+			\uIf{$t==1$}{
 				\uIf{$s$ is odd}{
 					use rules $\psi=1$ for starting module odd\;
 				}
@@ -890,7 +914,7 @@ compute $I_2=\mathcal{S}-(I_1-1)$\;
 					use rules $\psi=1$ for starting module even\;
 				}
 			}
-			\uIf{$rep==2$}{
+			\uIf{$t==2$}{
 				\uIf{$s$ is odd}{
 					use rules $\psi=2$ for starting module odd\;
 				}
@@ -898,7 +922,7 @@ compute $I_2=\mathcal{S}-(I_1-1)$\;
 					use rules $\psi=2$ for starting module even\;
 				}
 			}
-			\uIf{$rep>2$}{
+			\uIf{$t>2$}{
 				\uIf{$s$ is odd}{
 					use rules $\psi>2$ for starting module odd\;
 				}
