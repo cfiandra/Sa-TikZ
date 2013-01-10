@@ -11,3 +11,6 @@
 %
 % The library provides an easy way to draw switching architectures
 % and to customize their aspect.
+% 
+% The library is now available on CTAN at:
+% http://www.ctan.org/pkg/sa-tikz
