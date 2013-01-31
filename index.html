@@ -63,15 +63,51 @@ this helps in understanding more quickly the issue and to give you a faster answ
 
         <h1>Examples</h1>
 
-<hr><h2>A simple example of Clos Networks</h2>
+<hr><h2>Simple examples of Clos Networks</h2>
+<p>Clos Networks could be Strictly Non Blocking or Rearrangeable. <code>Sa-TikZ</code> allows to draw them in both modes
+by computing automatically the constraints that define a Clos Network to belong to a given type.</p>
+
+<p>In the first example it is shown a Clos Network Strictly Non Blocking 8x10 with modules 2x2.</p>
+
+<p><img src="http://claudiofiandrino.altervista.org/LaTeX/Sa-TikZ/clossnb.png" alt="Example"></p>
+<p>The code:</p>
+
+<code>
+\documentclass{article}
+\usetikzlibrary{switching-architectures}
+
+\begin{document}
+\begin{tikzpicture}
+ \node[N=8, r1=4, M=10, clos snb] {};
+\end{tikzpicture}
+\end{document}
+</code>
+
+<p>The same Clos Network 8x10 with modules 2x2 is now drawn in order to be Rearrangeable.</p>
+
+<p><img src="http://claudiofiandrino.altervista.org/LaTeX/Sa-TikZ/closrear.png" alt="Example"></p>
+<p>The code:</p>
+
+<code>
+\documentclass{article}
+\usetikzlibrary{switching-architectures}
+
+\begin{document}
+\begin{tikzpicture}
+ \node[N=8, r1=4, M=10, clos rear] {};
+\end{tikzpicture}
+\end{document}
+</code>
 
 <hr><h2>A simple example of Benes Networks</h2>
 <p>This example represents a Benes Network 32x32 drawn in its whole completexity.</p>
 
 <p><img src="http://claudiofiandrino.altervista.org/LaTeX/Sa-TikZ/benes32.png" alt="Example"></p>
 
-<pre>
-\documentclass[tikz,border=2pt,png]{standalone}
+<p>The code:</p>
+
+<code>
+\documentclass{article}
 \usetikzlibrary{switching-architectures}
 
 \begin{document}
@@ -82,9 +118,7 @@ this helps in understanding more quickly the issue and to give you a faster answ
  \node[P=32,benes complete] {};
 \end{tikzpicture}
 \end{document}
-</pre>
-
-
+</code>
 
 <hr><h2>An advanced example</h2>
 <p>This advanced example shows a possible configuration of a Benes Network step by step in a presentation.
@@ -96,7 +130,7 @@ done using in the proper way the instruments provided by Beamer.
 
 <p>The code:</p>
 
-<pre>\documentclass{beamer}
+<code>\documentclass{beamer}
 \usepackage{lmodern}
 \usepackage{tikz}
 \usetikzlibrary{switching-architectures} % http://www.ctan.org/pkg/sa-tikz
@@ -222,37 +256,7 @@ Connections
 \end{columns}
 \end{frame}
 \end{document}
-</pre>
-        
-        <!--
-          <h3>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        
-        -->
+</code>
         
         </section>
         
