@@ -54,24 +54,29 @@ The official CTAN page is <a href="http://www.ctan.org/pkg/sa-tikz">http://www.c
 a link to download the documentation, also accessible typing in a terminal <code>texdoc sa-tikz</code>.
 </p>
 
-<hr><h3>How to contact the author</h3>
+<hr><h2>How to contact the author</h2>
 
 <p>To contact me for feature requests or problems you can send me an e-mail.</p>
 <p>Please, if you have problems try to produce a 
 <a href="http://meta.tex.stackexchange.com/questions/228/ive-just-been-told-i-have-to-write-a-minimal-example-what-is-that">minimal working example (MWE)</a>:
 this helps in understanding more quickly the issue and to give you a faster answer.</p>
 
-<hr><h3>A simple example of Clos Networks</h3>
+<hr><h2>A simple example of Clos Networks</h2>
 
-<hr><h3>A simple example of Benes Networks</h3>
+<hr><h2>A simple example of Benes Networks</h2>
 
-<hr><h3>An advanced example</h3>
-<p>This advanced example shows a possible configuration of a Benes Network step by step in a presentation.</p>
+<hr><h2>An advanced example</h2>
+<p>This advanced example shows a possible configuration of a Benes Network step by step in a presentation.
+Notice how in the left column it is shown the next built path before it is drawn in the network: this could be 
+done using in the proper way the instruments provided by Beamer.
+</p>
+
+<p><img src="http://claudiofiandrino.altervista.org/LaTeX/Sa-TikZ/benes_network.gif" alt="Example"></p>
 
 <p>The code:</p>
 
 <div class="highlight">
-<pre>\documentclass{beamer}
+<pre><code>\documentclass{beamer}
 \usepackage{lmodern}
 \usepackage{tikz}
 \usetikzlibrary{switching-architectures} % http://www.ctan.org/pkg/sa-tikz
@@ -197,10 +202,8 @@ Connections
 \end{columns}
 \end{frame}
 \end{document}
-</pre>
+</code></pre>
 </div>
-        
-        <p><img src="http://claudiofiandrino.altervista.org/LaTeX/Sa-TikZ/benes_network.gif" alt="Example"></p>
         
         <!--
           <h3>Welcome to GitHub Pages.</h3>
