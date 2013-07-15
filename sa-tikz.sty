@@ -28,6 +28,23 @@
    \global\expandafter\edef\csname #2\endcsname{\res}
 }
 
+% ROTATERIGHT:
+%
+% #1: number to be rotated
+% #2: numbers of bits
+% #3: output macro
+%
+\newcommand*{\rotateright}[3]{
+	\pgfmathisodd{#1}{test}
+	\ifnum\test=1
+		\pgfmathparse{#1/2 + 2^#2}
+	\else
+		\pgfmathparse{#1/2}
+	\fi
+	\pgfmathtruncatemacro\res\pgfmathresult
+	\global\expandafter\edef\csname #3\endcsname{\res}
+}
+
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % KEY DEFINITION - Design choices
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -1039,5 +1056,99 @@
 	}
 }
 
+% OMEGA
+
+\tikzset{omega/.code={
+	% Number of ports per module
+	\pgfmathtruncatemacro{\m}{2}
+
+	% Number of modules in each stage
+	\pgfmathtruncatemacro{\r}{\P/\m}
+
+	% Number of stages
+	\pgfmathtruncatemacro{\stages}{round(log2(\P))}
+
+	% Modules for all stages
+	\foreach \s [evaluate=\s as \numstage using int(\s-1)] in {0,...,\stages}{
+		\ifnum\s=0
+			% Invisible modules
+			\foreach \i in {1,...,\r}{
+				\path let \n2={-\i*\moduleysep} in
+				  node[rectangle,minimum height=\modulesize,#1,module opacity,xshift=\modulesize/2] 
+				  (r\s-\i) at +(-0.6*\modulexsep,\n2) {};
+
+				% Invisible modules outputs
+				\pgfmathsetmacro\rintervalspace{1/(\m+1)}
+				\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] in {1,...,\m}
+					\draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*0.3*\pinlength,0)$) coordinate (r\s-\i-front output-\routput) {} --
+					      ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)                        node       (r\s-\i-output-\routput) {};
+			}
+		\fi
+		\ifnum\s=\stages
+			% Final Module
+			\foreach \i in {1,...,\r}{
+				\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep} in node[module,#1,module opacity] (r\s-\i) at 
+					+(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+
+				% Final module inputs
+				\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+				\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] in {1,...,\m}
+					\draw ($(r\s-\i.north west)!\roneinterval!(r\s-\i.south west)-(0.5*0.3*\pinlength,0)$) coordinate                  (r\s-\i-front input-\roneinput) {} --
+					      ($(r\s-\i.north west)!\roneinterval!(r\s-\i.south west)$)                        node[circle,draw,scale=0.1] (r\s-\i-input-\roneinput) {};
+
+				% Final module outputs
+				\pgfmathsetmacro\rintervalspace{1/(\m+1)}
+				\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] in {1,...,\m}
+					\draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*0.3*\pinlength,0)$) coordinate                  (r\s-\i-front output-\routput) {} --
+					      ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)                        node[circle,draw,scale=0.1] (r\s-\i-output-\routput) {};
+			}
+		\fi
+
+		\pgfmathparse{and(\s>0,\s<\stages)}
+		\let\cond\pgfmathresult
+		\ifnum\cond=1
+			% Intermediate modules
+			\foreach \i in {1,...,\r}{
+				\path let \n1 = {int(0-\i)}, \n2={0-\i*\moduleysep} in node[module,#1,module opacity]  
+					(r\s-\i) at +(\numstage*0.6*\modulexsep,\n2) {\pgfmathparse{int(multiply(\n1,-1))}\pgfmathresult};
+
+				% Intermediate modules inputs
+				\pgfmathsetmacro\roneintervalspace{1/(\m+1)}
+				\foreach \roneinput[evaluate=\roneinput as \roneinterval using \roneintervalspace*\roneinput] in {1,...,\m}
+					\draw ($(r\s-\i.north west)!\roneinterval!(r\s-\i.south west)-(0.5*0.3*\pinlength,0)$) coordinate                  (r\s-\i-front input-\roneinput) {} --
+					      ($(r\s-\i.north west)!\roneinterval!(r\s-\i.south west)$)                        node[circle,draw,scale=0.1] (r\s-\i-input-\roneinput) {};
+
+				% Intermediate modules outputs
+				\pgfmathsetmacro\rintervalspace{1/(\m+1)}
+				\foreach \routput[evaluate=\routput as \rinterval using \rintervalspace*\routput] in {1,...,\m}
+					\draw ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)+(0.5*0.3*\pinlength,0)$) coordinate                  (r\s-\i-front output-\routput) {} --
+					      ($(r\s-\i.north east)!\rinterval!(r\s-\i.south east)$)                        node[circle,draw,scale=0.1] (r\s-\i-output-\routput) {};
+			}
+		\fi
+	}
+
+	% Test if connections should be removed
+	\ifconnectiondisabled
+		\relax
+	\else
+		% Connections
+		\foreach \stg[evaluate=\stg as \prevstg using int(\stg - 1)] in {1,...,\stages}{
+			\foreach \startmod in {1,...,\r}{
+				\rotateright{2*(\startmod - 1)}{\stages - 1}{address}
+				\pgfmathtruncatemacro\endmodi{\address/2 + 1}
+				\pgfmathtruncatemacro\endmodii{\endmodi + \r/2}
+				\pgfmathtruncatemacro\cond{mod(\startmod,2)}
+				\ifnum\cond=0
+					\draw(r\stg-\startmod-front input-1)--(r\prevstg-\endmodi-front output-2);
+					\draw(r\stg-\startmod-front input-2)--(r\prevstg-\endmodii-front output-2);
+				\else
+					\draw(r\stg-\startmod-front input-1)--(r\prevstg-\endmodi-front output-1);
+					\draw(r\stg-\startmod-front input-2)--(r\prevstg-\endmodii-front output-1);
+				\fi
+			}
+		}
+	\fi
+}
+}
 
 \endinput
