@@ -1,7 +1,7 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % Sa-TikZ: TikZ library to draw switching architectures
 %
-% Version v0.5 03/01/2013 - (C) Claudio Fiandrino
+% Version v0.6 28/09/2013 - (C) Claudio Fiandrino
 % 
 % E-mail: claudio dot fiandrino at gmail dot com
 %
@@ -11,6 +11,3 @@
 %
 % The library provides an easy way to draw switching architectures
 % and to customize their aspect.
-% 
-% The library is now available on CTAN; the official link is:
-% http://www.ctan.org/pkg/sa-tikz
