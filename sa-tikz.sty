@@ -1,32 +1,16 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.6 * * (C) Claudio Fiandrino 2012-2013
+% Sa-TikZ package v0.7 * * (C) Claudio Fiandrino 2012-2014
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sa-tikz}[2013/9/28 v0.6 Switching architectures design library.]
+\ProvidesPackage{sa-tikz}[2014/1/21 v0.7 Switching architectures design library.]
 \RequirePackage{tikz}
 \usetikzlibrary{backgrounds,calc,positioning,decorations.pathreplacing}
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % UTILITY
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-% PGFMATHISODD: 1 = true, 0 = false
-%
-% #1: number to be checked
-% #2: output macro
-%
-% example: 
-%% \pgfmathisodd{32}{output} 
-%% \ifnum\output=1
-%% \node{\output};
-%% \fi
-\newcommand*{\pgfmathisodd}[2]{
-   \pgfmathparse{mod(#1,2)} 
-   \pgfmathtruncatemacro\res\pgfmathresult
-   \global\expandafter\edef\csname #2\endcsname{\res}
-}
 
 % PGFMATHOMEGAROTATION:
 %
@@ -35,8 +19,8 @@
 % #3: output macro
 %
 \newcommand*{\pgfmathomegarotation}[3]{
-	\pgfmathisodd{#1}{test}
-	\ifnum\test=1
+	\pgfmathisodd{#1}
+	\ifnum\pgfmathresult=1
 		\pgfmathparse{#1/2 + 2^#2}
 	\else
 		\pgfmathparse{#1/2}
@@ -44,8 +28,6 @@
 	\pgfmathtruncatemacro\res\pgfmathresult
 	\global\expandafter\edef\csname #3\endcsname{\res}
 }
-
-
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % KEY DEFINITION - Design choices
@@ -912,9 +894,9 @@
          		\pgfmathtruncatemacro\startingpoint{1+((\t-1)*\applicationon)}
          		\pgfmathtruncatemacro\endingpoint{(\startingpoint+\applicationon)-1}
 	         	\foreach \startmodule in {\startingpoint,...,\endingpoint}{ 
-		         \pgfmathisodd{\startmodule}{initmodule}
+		         \pgfmathisodd{\startmodule}
 		         \ifnum\t=1
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2)}
@@ -929,7 +911,7 @@
 			         \fi
 			      \fi
 			      \ifnum\t=2
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2))}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2))}
@@ -944,7 +926,7 @@
 			         \fi
 			      \fi	
 			      \ifnum\t>2
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
@@ -972,9 +954,9 @@
          		\pgfmathtruncatemacro\startingpoint{1+((\t-1)*\applicationon)}
          		\pgfmathtruncatemacro\endingpoint{(\startingpoint+\applicationon)-1}
 	         	\foreach \startmodule in {\startingpoint,...,\endingpoint}{    
-		         \pgfmathisodd{\startmodule}{initmodule}
+		         \pgfmathisodd{\startmodule}
 		         \ifnum\t=1
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2)}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2)}
@@ -989,7 +971,7 @@
 			         \fi
 			      \fi
 			      \ifnum\t=2
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2))}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2))}
@@ -1004,7 +986,7 @@
 			         \fi
 			      \fi	
 			      \ifnum\t>2
-			         \ifnum\initmodule=1
+			         \ifnum\pgfmathresult=1
 			          % if odd
 			          	\pgfmathtruncatemacro\endmodulei{int((\startmodule+1)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
 			          	\pgfmathtruncatemacro\endmoduleii{int((\startmodule+1+\applicationon)/2+(\applicationon/2)+((\applicationon/2)*(\t-2)))}
@@ -1036,8 +1018,8 @@
          
       % Drawing
 	   \foreach \startmodule in {1,...,\r}{
-	      \pgfmathisodd{\startmodule}{initmodule}
-	      \ifnum\initmodule=1
+	      \pgfmathisodd{\startmodule}
+	      \ifnum\pgfmathresult=1
 	         % if odd
 	         \pgfmathtruncatemacro\endmodule{int(\startmodule+1)}
 			   \draw(r\middlestage-\startmodule-output-1)--(r\middlestagei-\startmodule-input-1);
