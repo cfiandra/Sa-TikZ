@@ -1,16 +1,34 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.7 * * (C) Claudio Fiandrino 2012-2014
+% Sa-TikZ package v0.7a * * (C) Claudio Fiandrino 2012-2014
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sa-tikz}[2014/1/21 v0.7 Switching architectures design library.]
+\ProvidesPackage{sa-tikz}[2014/1/29 v0.7a Switching architectures design library.]
 \RequirePackage{tikz}
 \usetikzlibrary{backgrounds,calc,positioning,decorations.pathreplacing}
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % UTILITY
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+% PGFMATHISODD: 1 = true, 0 = false
+% from TikZ 3.0.0
+% Test for checking whether \pgfmathisodd is defined or not
+% for compatibility with TikZ 2.10
+%
+\@ifundefined{pgfmathisodd}{
+\pgfmathdeclarefunction{isodd}{1}{%
+  \begingroup
+    \pgfmathsetcount\c@pgfmath@counta{abs(int(#1))}%
+    \ifodd\c@pgfmath@counta
+      \def\pgfmathresult{1}%
+    \else
+      \def\pgfmathresult{0}%
+    \fi
+    \pgfmath@smuggleone\pgfmathresult
+  \endgroup}
+}{}
 
 % PGFMATHOMEGAROTATION:
 %

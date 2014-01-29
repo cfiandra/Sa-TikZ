@@ -1,6 +1,6 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % 
-% Sa-TikZ package v0.7 * * (C) Claudio Fiandrino 2012-2014
+% Sa-TikZ package v0.7a * * (C) Claudio Fiandrino 2012-2014
 % 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -13,6 +13,24 @@
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % UTILITY
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+% PGFMATHISODD: 1 = true, 0 = false
+% from TikZ 3.0.0
+% Test for checking whether \pgfmathisodd is defined or not
+% for compatibility with TikZ 2.10
+%
+\@ifundefined{pgfmathisodd}{
+\pgfmathdeclarefunction{isodd}{1}{%
+  \begingroup
+    \pgfmathsetcount\c@pgfmath@counta{abs(int(#1))}%
+    \ifodd\c@pgfmath@counta
+      \def\pgfmathresult{1}%
+    \else
+      \def\pgfmathresult{0}%
+    \fi
+    \pgfmath@smuggleone\pgfmathresult
+  \endgroup}
+}{}
 
 % PGFMATHOMEGAROTATION:
 %
