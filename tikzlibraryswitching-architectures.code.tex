@@ -59,80 +59,71 @@
 
 % N is the key representing the number of inputs x number of modules first stage
 \pgfkeys{/tikz/.cd,%
-      N/.initial=10,% 
-      N/.get=\N,%
       N/.store in=\N,%
+      N=10,%
 }%
 
 % N label
 \pgfkeys{/tikz/.cd,%
-      N label/.initial=N,%
       N label/.store in=\Nlabel,%
-      N label/.get=\Nlabel,%
+      N label=N,%
 }%
 
 % r1 is the number of modules first stage
 % m1 is the number of inputs first stage per module
 
 \pgfkeys{/tikz/.cd,%
-      r1/.initial=5,%
       r1/.store in=\rone,%
-      r1/.get=\rone,%
+      r1=5,%
 }%
 
 % r1 label
 \pgfkeys{/tikz/.cd,%
-      r1 label/.initial={r\ensuremath{_1}},%
       r1 label/.store in=\ronelabel,%
-      r1 label/.get=\ronelabel,%
+      r1 label={r\ensuremath{_1}},%
 }%
 
 % m1 label
-\pgfkeys{/tikz/.cd, 
-      m1 label/.initial={m\ensuremath{_1}},%
+\pgfkeys{/tikz/.cd,%
       m1 label/.store in=\monelabel,%
-      m1 label/.get=\monelabel,%
+      m1 label={m\ensuremath{_1}},%
 }%
 
 % r2 label
 \pgfkeys{/tikz/.cd,%
-      r2 label/.initial={r\ensuremath{_2}},%
       r2 label/.store in=\rtwolabel,%
-      r2 label/.get=\rtwolabel,%
+      r2 label={r\ensuremath{_2}},%
 }%
 
 % M is the key representing the number of inputs x number of modules last stage
 \pgfkeys{/tikz/.cd,%
-      M/.initial=10,% 
-      M/.get=\M,%
       M/.store in=\M,%
+      M=10,% 
 }%
 
 % M label
 \pgfkeys{/tikz/.cd,%
-      M label/.initial=M,%
       M label/.store in=\Mlabel,%
-      M label/.get=\Mlabel,%
+      M label=M,%
 }%
 
 % r3 is the number of modules last stage
 % m3 is the number of inputs last stage per module
-\pgfmathtruncatemacro\rthree{5}%
-\pgfkeys{/tikz/.cd, r3/.initial=5}%
-\pgfkeys{/tikz/.cd, r3/.store in=\rthree}%
+\pgfkeys{/tikz/.cd,%
+	r3/.store in=\rthree,%
+	r3=5
+}%
 
 % r3 label
 \pgfkeys{/tikz/.cd,%
-      r3 label/.initial={r\ensuremath{_3}},%
       r3 label/.store in=\rthreelabel,%
-      r3 label/.get=\rthreelabel,%
+      r3 label={r\ensuremath{_3}},%
 }%
 
 % m3 label
-\pgfkeys{/tikz/.cd, 
-      m3 label/.initial={m\ensuremath{_3}},%
+\pgfkeys{/tikz/.cd,
       m3 label/.store in=\mthreelabel,%
-      m3 label/.get=\mthreelabel,%
+      m3 label={m\ensuremath{_3}},%
 }%
 
 % * * * * * * * * * * * * * * * * * *
@@ -141,9 +132,8 @@
 
 % P is the number of input/output ports
 \pgfkeys{/tikz/.cd,%
-      P/.initial=8,% 
-      P/.get=\P,%
       P/.store in=\P,%
+      P=8,%
 }%
 
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -152,27 +142,23 @@
 
 % module customization
 \pgfkeys{/tikz/.cd,%
-      module size/.initial={1cm},% 
-      module size/.get=\modulesize,%
       module size/.store in=\modulesize,%
+      module size={1cm},%
 }%
 
 \pgfkeys{/tikz/.cd,%
-      module ysep/.initial={1.5},% 
-      module ysep/.get=\moduleysep,%
       module ysep/.store in=\moduleysep,%
+      module ysep={1.5},
 }%
 
 \pgfkeys{/tikz/.cd,%
-      module xsep/.initial={3},%
-      module xsep/.get=\modulexsep,%
       module xsep/.store in=\modulexsep,%
+      module xsep={3},%
 }%
 
 \pgfkeys{/tikz/.cd,%
-      module font/.initial=\normalfont,%
-      module font/.get=\modulefont,%
       module font/.store in=\modulefont,%
+      module font={\normalfont},%
 }%
 
 \tikzset{module/.style={%
@@ -188,9 +174,8 @@
 }
 
 \pgfkeys{/tikz/.cd,%
-      module label opacity/.initial={1},% 
-      module label opacity/.get=\modulelabelopacity,%
       module label opacity/.store in=\modulelabelopacity,%
+      module label opacity={1},%
 }%
 
 \tikzset{module opacity/.style={
@@ -199,9 +184,8 @@
 }
 
 \pgfkeys{/tikz/.cd,%
-      pin length factor/.initial={1},% 
-      pin length factor/.get=\pinlength,%
       pin length factor/.store in=\pinlength,%
+      pin length factor={1},%
 }%
 
 % setting labels in math mode
